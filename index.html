@@ -1,0 +1,2959 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Attendance Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0d6efd" />
+  <meta name="description"
+    content="Attendance Management SaaS Platform - Mark attendance securely with face verification" />
+
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="./assets/img/icon-192.png" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="AttendSmart" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260323-2" />
+  <!-- Face Verification CSS -->
+  <link rel="stylesheet" href="assets/css/face-verification.css?v=20260323-2" />
+</head>
+
+<body class="bg-body-tertiary">
+
+  <!-- LOGIN PAGE -->
+  <main id="login-page" class="min-vh-100 d-flex align-items-center justify-content-center bg-body-tertiary">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-11 col-sm-8 col-md-6 col-lg-4">
+          <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <div class="text-center mb-4">
+                <div class="mb-3">
+                  <i class="bi bi-people-fill display-5 text-primary"></i>
+                </div>
+                <h5 class="fw-semibold mb-1">Attendance Management System</h5>
+                <p class="text-muted small mb-0">Unified portal for all roles</p>
+              </div>
+
+              <div id="login-error" class="alert alert-danger d-none small" role="alert">
+                Invalid User ID or password.
+              </div>
+
+              <form id="login-form" novalidate>
+                <div class="mb-3">
+                  <label for="userId" class="form-label small fw-semibold">User ID</label>
+                  <input type="text" class="form-control" id="userId" placeholder="Enter your User ID" required>
+                </div>
+                <div class="mb-2">
+                  <label for="password" class="form-label small fw-semibold">Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                      required>
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <a href="#" class="small">Forgot Password?</a>
+                </div>
+                <div class="d-grid mb-2">
+                  <button type="submit" class="btn btn-primary">
+                    <span class="spinner-border spinner-border-sm me-2 d-none" id="login-loading"></span>
+                    Login
+                  </button>
+                </div>
+              </form>
+
+              <p class="text-muted text-center small mb-0 mt-2">
+                Multi-college cloud platform. Single portal for all users.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- APP SHELL (POST-LOGIN) -->
+  <div id="app-shell" class="d-none">
+    <!-- Header -->
+    <header id="app-header" class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
+      <div class="container-fluid">
+        <!-- Brand -->
+        <div class="d-flex align-items-center app-brand-wrap me-2">
+          <img id="college-logo" src="assets/img/logo-placeholder.svg" alt="College Logo" class="rounded me-2"
+            style="object-fit:contain;">
+          <div class="d-flex flex-column min-w-0">
+            <div id="college-name" class="fw-semibold text-uppercase">
+              Sample College
+            </div>
+            <div id="college-subtitle" class="small text-muted">
+              Attendance Management System
+            </div>
+          </div>
+        </div>
+
+        <div id="header-actions" class="d-flex align-items-center ms-auto">
+          <!-- Mobile sidebar toggle (right side, next to profile) -->
+          <button id="sidebar-toggle-btn" class="btn btn-link d-md-none" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebar">
+            <i class="bi bi-list fs-4"></i>
+          </button>
+          <!-- Date & time -->
+          <div id="current-datetime" class="d-none d-md-block small text-muted me-3"></div>
+
+          <!-- Notifications -->
+          <button class="btn btn-light position-relative me-2 d-none" type="button" id="notification-btn"
+            aria-label="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
+              id="notification-count">
+              0
+            </span>
+          </button>
+
+          <!-- Profile dropdown -->
+          <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="userMenuButton"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="me-2 text-start" id="user-menu-meta">
+                <span id="user-name" class="fw-semibold small">John Doe</span><br>
+                <span id="user-role-badge" class="badge bg-primary-subtle text-primary-emphasis small">Student</span>
+              </span>
+              <img id="header-avatar" src="assets/img/avatar-placeholder.svg" alt="User" class="rounded-circle"
+                style="width:32px;height:32px;">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-start dropdown-menu-md-end">
+              <li>
+                <h6 class="dropdown-header">Signed in as <span id="user-id-label">USR001</span></h6>
+              </li>
+              <li><a class="dropdown-item" href="#" data-nav="profile"><i class="bi bi-person me-2"></i>Profile</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><button class="dropdown-item text-danger" id="logout-btn"><i
+                    class="bi bi-box-arrow-right me-2"></i>Logout</button></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Layout -->
+    <div class="container-fluid" id="app-main-container">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="bg-white border-end sidebar collapse">
+          <div class="pt-3 h-100">
+            <ul class="nav flex-column small h-100" id="sidebar-nav">
+              <!-- DASHBOARD -->
+              <li class="nav-item">
+                <a class="nav-link active" href="#" data-nav="dashboard"
+                  data-roles="super_admin,college_admin,faculty,student">
+                  <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
+              </li>
+
+              <!-- SUPER ADMIN -->
+              <li class="nav-item">
+                <a class="nav-link d-flex justify-content-between align-items-center" href="#" data-bs-toggle="collapse"
+                  data-bs-target="#sa-colleges-nav" aria-expanded="true" data-roles="super_admin">
+                  <span><i class="bi bi-building me-2"></i>Colleges</span>
+                  <i class="bi bi-chevron-down small"></i>
+                </a>
+                <div class="collapse show" id="sa-colleges-nav">
+                  <ul class="nav flex-column ms-3">
+                    <li class="nav-item">
+                      <a class="nav-link py-1" href="#" data-nav="colleges-mgmt" data-roles="super_admin">
+                        <i class="bi bi-list-ul me-2"></i>College List
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link py-1" href="#" data-nav="sa-departments" data-roles="super_admin">
+                        <i class="bi bi-diagram-3 me-2"></i>Department Data
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link py-1" href="#" data-nav="sa-students" data-roles="super_admin">
+                        <i class="bi bi-mortarboard me-2"></i>Student Records
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link py-1" href="#" data-nav="sa-faculty" data-roles="super_admin">
+                        <i class="bi bi-person-workspace me-2"></i>Faculty Records
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="users-overview" data-roles="super_admin">
+                  <i class="bi bi-people me-2"></i>Users Overview
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="platform-analytics" data-roles="super_admin">
+                  <i class="bi bi-graph-up-arrow me-2"></i>Platform Analytics
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="subscription" data-roles="super_admin">
+                  <i class="bi bi-credit-card me-2"></i>Subscription / Licensing
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="audit-logs" data-roles="super_admin">
+                  <i class="bi bi-clipboard-data me-2"></i>Audit Logs
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="settings" data-roles="super_admin">
+                  <i class="bi bi-gear me-2"></i>Settings
+                </a>
+              </li>
+
+              <!-- COLLEGE ADMIN -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="students-mgmt" data-roles="college_admin">
+                  <i class="bi bi-person-badge me-2"></i>Students Management
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="faculty-mgmt" data-roles="college_admin">
+                  <i class="bi bi-person-workspace me-2"></i>Faculty Management
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="departments-courses" data-roles="college_admin">
+                  <i class="bi bi-diagram-3 me-2"></i>Departments & Courses
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="timetable-mgmt" data-roles="college_admin">
+                  <i class="bi bi-calendar-event me-2"></i>Timetable Management
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="college-archive" data-roles="college_admin">
+                  <i class="bi bi-archive me-2"></i>Archive
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="attendance-reports" data-roles="college_admin">
+                  <i class="bi bi-clipboard-check me-2"></i>Attendance Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="college-settings" data-roles="college_admin">
+                  <i class="bi bi-gear-wide-connected me-2"></i>College Settings
+                </a>
+              </li>
+
+              <!-- FACULTY -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="my-classes" data-roles="faculty">
+                  <i class="bi bi-journal-bookmark me-2"></i>My Classes
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="dept-students" data-roles="faculty">
+                  <i class="bi bi-people me-2"></i>Department Students
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="start-attendance" data-roles="faculty">
+                  <i class="bi bi-play-circle me-2"></i>Start Attendance Session
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="attendance-history" data-roles="faculty">
+                  <i class="bi bi-clock-history me-2"></i>Attendance History
+                </a>
+              </li>
+
+              <!-- STUDENT -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="mark-attendance" data-roles="student">
+                  <i class="bi bi-check-circle me-2"></i>Mark Attendance
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="student-attendance-history" data-roles="student">
+                  <i class="bi bi-journal-check me-2"></i>My Attendance History
+                </a>
+              </li>
+
+              <!-- SHARED -->
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="notices" data-roles="student,faculty,college_admin">
+                  <i class="bi bi-megaphone me-2"></i>Notices
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-nav="timetable" data-roles="student,faculty,college_admin">
+                  <i class="bi bi-calendar-week me-2"></i>Timetable
+                </a>
+              </li>
+              <li class="nav-item mt-auto pt-2 border-top sidebar-profile-link">
+                <a class="nav-link" href="#" data-nav="profile" data-roles="super_admin,college_admin,faculty,student">
+                  <i class="bi bi-person-circle me-2"></i>Profile
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main id="main-content" class="px-3 px-lg-4 py-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <nav aria-label="breadcrumb">
+              <ol id="breadcrumb" class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#" data-nav="dashboard">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page" id="breadcrumb-current">Dashboard</li>
+              </ol>
+            </nav>
+            <div id="page-actions"></div>
+          </div>
+
+          <div id="page-container">
+            <!-- STUDENT DASHBOARD -->
+            <section id="student-dashboard" class="page-section page-visible" data-roles="student">
+              <div class="row g-2 g-md-3 g-xl-4 mb-3 mb-xl-4">
+                <div class="col-12 col-md-6 col-xl-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-2">Student Overview</h6>
+                      <p class="mb-1 fw-semibold" id="student-name">-</p>
+                      <p class="mb-1 small text-muted">ID: <span id="student-id">-</span></p>
+                      <p class="mb-1 small text-muted">Dept / Course / Year / Section</p>
+                      <p class="mb-0 small" id="student-meta">-</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-4">
+                  <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title mb-0">Face Registration</h6>
+                        <span id="face-status-badge" class="badge bg-warning text-dark">Not Registered</span>
+                      </div>
+                      <p class="small text-muted mb-3">
+                        Register your face to enable secure attendance marking.
+                      </p>
+                      <p class="small text-muted mb-3" id="face-update-card-info">
+                        Monthly face update limit: 2 updates.
+                      </p>
+                      <div class="mt-auto">
+                        <a href="#" class="btn btn-outline-primary btn-sm" data-nav="face-registration">
+                          Go to Face Registration
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-2">Overall Attendance</h6>
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="fs-4 fw-semibold me-2" id="attendance-percent">0%</span>
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis small"
+                          id="attendance-status-badge">--</span>
+                      </div>
+                      <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-secondary" role="progressbar" id="attendance-progress-bar"
+                          style="width: 0%;"></div>
+                      </div>
+                      <p class="small text-muted mt-2 mb-0">Minimum required: 75%</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4">
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <h6 class="card-title mb-3">Current Class</h6>
+                      <div id="active-class" class="d-none">
+                        <p class="mb-1 fw-semibold">Data Structures</p>
+                        <p class="small text-muted mb-2">09:00 AM - 10:00 AM • Room C-201</p>
+                        <span class="badge bg-success-subtle text-success-emphasis mb-3">Active Attendance
+                          Session</span>
+                        <button class="btn btn-primary w-100 mb-2" data-nav="attendance-marking">
+                          Mark Attendance Now
+                        </button>
+                        <p class="small text-muted mb-0">Attendance closes in <span id="remaining-time">08:15</span>.
+                        </p>
+                      </div>
+                      <div id="no-active-class">
+                        <p class="small text-muted mb-2">No ongoing class right now.</p>
+                        <a href="#" data-nav="timetable" class="btn btn-outline-secondary btn-sm">
+                          View Today’s Timetable
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Upcoming Classes</h6>
+                      <ul class="list-group list-group-flush small" id="upcoming-classes">
+                        <li class="list-group-item px-0 text-muted">Loading classes...</li>
+                      </ul>
+                      <a href="#" data-nav="timetable" class="small mt-3 d-block">View full timetable</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title mb-0">Recent Attendance</h6>
+                        <a href="#" data-nav="student-attendance-history" class="small">View all</a>
+                      </div>
+                      <div class="table-responsive small">
+                        <table class="table table-sm align-middle mb-0">
+                          <thead class="table-light">
+                            <tr>
+                              <th>Date</th>
+                              <th>Subject</th>
+                              <th>Status</th>
+                              <th>Score</th>
+                            </tr>
+                          </thead>
+                          <tbody id="recent-attendance">
+                            <tr>
+                              <td colspan="4" class="text-muted">Loading attendance...</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- FACULTY DASHBOARD -->
+            <section id="faculty-dashboard" class="page-section page-hidden" data-roles="faculty">
+              <div class="row g-2 g-md-3 g-xl-4 mb-3 mb-xl-4">
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-2">Faculty Overview</h6>
+                      <p class="fw-semibold mb-1" id="faculty-name">-</p>
+                      <p class="small text-muted mb-2" id="faculty-dept">Department not assigned</p>
+                      <hr class="my-2">
+                      <h6 class="small text-uppercase text-muted mb-2">Next Class Session</h6>
+                      <div id="faculty-next-class">
+                        <p class="fw-semibold mb-1" id="faculty-next-subject">No upcoming class today</p>
+                        <p class="small text-muted mb-1" id="faculty-next-slot">-</p>
+                        <p class="small text-muted mb-0" id="faculty-next-time">-</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-2">Active Session</h6>
+                        <div id="faculty-active-session" class="d-none">
+                          <div class="d-flex justify-content-between align-items-start mb-1">
+                            <p class="fw-semibold mb-0" id="active-subject">Data Structures</p>
+                            <span class="badge bg-danger rounded-pill" id="faculty-otp-timer">09:59</span>
+                          </div>
+                          <p class="small text-muted mb-1" id="active-slot">09:00 AM - 10:00 AM • C-201</p>
+                          <div id="active-extra-reason-wrap" class="alert alert-warning py-1 px-2 mb-2 d-none" style="font-size: 0.75rem;">
+                            <strong>Reason:</strong> <span id="active-extra-reason"></span>
+                          </div>
+                          <p class="small mb-2">OTP: <span class="fw-semibold border rounded px-2 py-1 bg-light" id="active-otp" style="font-size: 1.2rem; letter-spacing: 2px;">------</span></p>
+                          <div class="d-flex justify-content-between small mb-2">
+                            <span>Present: <span id="present-count" class="fw-semibold text-success">0</span></span>
+                            <span>Absent: <span id="absent-count" class="fw-semibold text-danger">0</span></span>
+                          </div>
+                        <button class="btn btn-outline-danger btn-sm" id="end-session-btn">
+                          End Session
+                        </button>
+                      </div>
+                      <div id="no-faculty-active-session">
+                        <p class="small text-muted mb-3">No active attendance session.</p>
+                        <button class="btn btn-primary btn-sm" data-nav="start-attendance">
+                          Start Attendance Session
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-2">OTP Generation</h6>
+                      <p class="small text-muted">Generate OTP for the selected class slot.</p>
+                      <select class="form-select form-select-sm mb-2" id="otp-class-select">
+                        <option>09:00 - 10:00 • DS • C-201</option>
+                      </select>
+                      <div class="d-grid gap-2 mb-2">
+                        <button class="btn btn-outline-primary btn-sm" id="generate-otp-btn">
+                          Generate OTP (Scheduled Slot)
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" id="generate-otp-extra-btn">
+                          Generate OTP (Extra Class + Reason)
+                        </button>
+                      </div>
+                      <p class="small text-muted mb-2" id="live-session-hint">Live slot check in progress...</p>
+                      <div id="generated-otp-wrapper" class="d-none small">
+                        Current OTP: <span id="generated-otp" class="fw-semibold"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4">
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Today’s Classes</h6>
+                      <div class="list-group small" id="today-classes">
+                        <div class="text-muted small">Loading classes...</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="card-title mb-0">Recent Sessions</h6>
+                        <a href="#" data-nav="attendance-history" class="small">View all</a>
+                      </div>
+                      <div class="table-responsive small">
+                        <table class="table table-sm align-middle mb-0">
+                          <thead class="table-light">
+                            <tr>
+                              <th>Date</th>
+                              <th>Class</th>
+                              <th>Present</th>
+                              <th>Absent</th>
+                            </tr>
+                          </thead>
+                          <tbody id="recent-sessions">
+                            <tr>
+                              <td colspan="4" class="text-muted">Loading recent sessions...</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- COLLEGE ADMIN DASHBOARD -->
+            <section id="college_admin-dashboard" class="page-section page-hidden" data-roles="college_admin">
+              <div class="row g-2 g-md-3 g-xl-4 mb-3 mb-xl-4">
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Total Students</p>
+                      <p class="fs-4 fw-semibold mb-0" id="total-students">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Total Faculty</p>
+                      <p class="fs-4 fw-semibold mb-0" id="total-faculty">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Departments</p>
+                      <p class="fs-4 fw-semibold mb-0" id="departments-count">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Avg Attendance</p>
+                      <p class="fs-4 fw-semibold mb-0" id="avg-attendance">0%</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Today Attendance</p>
+                      <p class="fs-4 fw-semibold mb-0" id="daily-attendance">0%</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4 col-xl-2">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Low Attendance</p>
+                      <p class="fs-4 fw-semibold mb-0" id="low-attendance-count">0</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4 mb-3">
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Daily Attendance %</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center p-2 dashboard-chart-wrap"
+                        style="height: 240px; position: relative;">
+                        <canvas id="collegeAdminAttendanceChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Monthly Report</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center p-2 dashboard-chart-wrap"
+                        style="height: 240px; position: relative;">
+                        <canvas id="collegeAdminMonthlyReportChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4">
+                <div class="col-12 col-lg-4">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Quick Actions</h6>
+                      <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-sm" id="quick-add-student-btn">
+                          <i class="bi bi-person-plus me-2"></i>Add Student
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" id="quick-upload-timetable-btn">
+                          <i class="bi bi-cloud-upload me-2"></i>Upload Timetable
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Recent Activity</h6>
+                      <ul class="list-group list-group-flush small" id="college-recent-activity">
+                        <li class="list-group-item px-0 text-muted">Loading activity...</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-8">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
+                        <h6 class="card-title mb-0">Low Attendance Students</h6>
+                        <span class="badge bg-danger-subtle text-danger-emphasis">Below 75%</span>
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                          <thead class="table-light">
+                            <tr>
+                              <th>Student</th>
+                              <th>Department</th>
+                              <th>Class</th>
+                              <th>Present/Total</th>
+                              <th>Attendance</th>
+                            </tr>
+                          </thead>
+                          <tbody id="low-attendance-students">
+                            <tr>
+                              <td colspan="5" class="text-muted">Loading low attendance students...</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN DASHBOARD -->
+            <section id="super_admin-dashboard" class="page-section page-hidden" data-roles="super_admin">
+              <div class="row g-2 g-md-3 g-xl-4 mb-3 mb-xl-4">
+                <div class="col-6 col-lg-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Colleges Onboarded</p>
+                      <p class="fs-4 fw-semibold mb-0" id="total-colleges">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Active Users</p>
+                      <p class="fs-4 fw-semibold mb-0" id="active-users">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Monthly Sessions</p>
+                      <p class="fs-4 fw-semibold mb-0" id="platform-sessions">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Uptime</p>
+                      <p class="fs-4 fw-semibold mb-0" id="uptime">--</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4">
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Platform Usage</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center p-2 dashboard-chart-wrap"
+                        style="height: 220px; position: relative;">
+                        <canvas id="superAdminUsageChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Revenue & Subscription</h6>
+                      <div class="row">
+                        <div class="col-6">
+                          <p class="small text-muted mb-1">MRR</p>
+                          <p class="fw-semibold mb-3" id="mrr">--</p>
+                        </div>
+                        <div class="col-6">
+                          <p class="small text-muted mb-1">Active Subscriptions</p>
+                          <p class="fw-semibold mb-3" id="active-subscriptions">0</p>
+                        </div>
+                      </div>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center p-2 dashboard-chart-wrap"
+                        style="height: 150px; position: relative;">
+                        <canvas id="superAdminRevenueChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-2 g-md-3 g-xl-4 mt-1">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Recent System Activities</h6>
+                      <ul class="list-group list-group-flush small" id="system-activities">
+                        <li class="list-group-item px-0 text-muted">Loading activity...</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- PROFILE PAGE -->
+            <section id="profile-page" class="page-section page-hidden"
+              data-roles="super_admin,college_admin,faculty,student">
+              <div class="row g-2 g-md-3 g-xl-4">
+                <div class="col-12 col-md-4">
+                  <div class="card h-100">
+                    <div class="card-body text-center">
+                      <div class="mb-3">
+                        <img id="profile-avatar" src="assets/img/avatar-placeholder.svg" alt="Profile Avatar"
+                          class="rounded-circle object-fit-cover border border-2 border-body-tertiary"
+                          style="width:96px;height:96px;">
+                        <div class="mt-2">
+                          <button type="button" class="btn btn-outline-primary btn-sm d-none"
+                            id="profile-photo-btn">Update Photo</button>
+                          <input type="file" id="profile-photo-input" class="d-none"
+                            accept="image/png,image/jpeg,image/webp">
+                        </div>
+                      </div>
+                      <h6 class="fw-semibold mb-1" id="profile-name">John Doe</h6>
+                      <p class="small text-muted mb-1">
+                        <span id="profile-role-badge"
+                          class="badge bg-primary-subtle text-primary-emphasis">Student</span>
+                      </p>
+                      <p class="small text-muted mb-3" id="profile-college">Sample College</p>
+                      <p class="small mb-1">Status:
+                        <span id="profile-status" class="badge bg-success-subtle text-success-emphasis">Active</span>
+                      </p>
+                      <p class="small text-muted mb-0">
+                        Last login: <span id="profile-last-login">24 Feb 2026, 10:14 AM</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-md-8">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Profile Details</h6>
+                      <form id="profile-form" class="small">
+                        <div class="row g-3">
+                          <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control form-control-sm" id="profile-name-input">
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label">Unique ID</label>
+                            <input type="text" class="form-control form-control-sm" id="profile-id-input" disabled>
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control form-control-sm" id="profile-email-input">
+                          </div>
+                          <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" class="form-control form-control-sm" id="profile-phone-input">
+                          </div>
+                          <div class="col-md-12">
+                            <label class="form-label">College</label>
+                            <input type="text" class="form-control form-control-sm" id="profile-college-input" disabled>
+                          </div>
+                          <div class="col-12 d-none" id="profile-student-fields">
+                            <hr class="my-2">
+                            <h6 class="small text-uppercase text-muted mb-2">Department Info</h6>
+                            <div class="row g-3">
+                              <div class="col-md-6">
+                                <label class="form-label">Assigned Department</label>
+                                <input type="text" class="form-control form-control-sm" id="profile-dept-input"
+                                  disabled>
+                              </div>
+                              <div class="col-md-6">
+                                <label class="form-label">Course</label>
+                                <input type="text" class="form-control form-control-sm" id="profile-course-input"
+                                  disabled>
+                              </div>
+                              <div class="col-md-4">
+                                <label class="form-label">Year</label>
+                                <input type="text" class="form-control form-control-sm" id="profile-year-input"
+                                  disabled>
+                              </div>
+                              <div class="col-md-4">
+                                <label class="form-label">Semester</label>
+                                <input type="text" class="form-control form-control-sm" id="profile-semester-input"
+                                  disabled>
+                              </div>
+                              <div class="col-md-4">
+                                <label class="form-label">Section</label>
+                                <input type="text" class="form-control form-control-sm" id="profile-section-input"
+                                  disabled>
+                              </div>
+                              <div class="col-12">
+                                <label class="form-label">Hobbies</label>
+                                <textarea class="form-control form-control-sm" id="profile-hobbies-input" rows="2"
+                                  placeholder="e.g., Reading, Cricket, Coding"></textarea>
+                              </div>
+                              <div class="col-12">
+                                <label class="form-label">Department Info (Optional)</label>
+                                <textarea class="form-control form-control-sm" id="profile-department-info-input"
+                                  rows="2" placeholder="Optional notes about your department"></textarea>
+                                <div class="form-text">Assigned department details are managed by College Admin.</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                          <button type="button" class="btn btn-outline-secondary btn-sm me-2"
+                            id="profile-cancel-btn">Cancel</button>
+                          <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Change Password</h6>
+                      <form id="change-password-form" class="small">
+                        <div class="row g-3">
+                          <div class="col-md-4">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control form-control-sm" id="current-password">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control form-control-sm" id="new-password">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control form-control-sm" id="confirm-password">
+                          </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                          <button type="submit" class="btn btn-outline-primary btn-sm">Update Password</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- FACE REGISTRATION -->
+            <section id="face-registration" class="page-section page-hidden" data-roles="student">
+              <div class="row g-3">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Face Registration - Multi-Sample Enrollment</h6>
+                      <p class="text-muted small mb-3">
+                        Capture 4 facial samples from different angles for accurate face verification.
+                        The system will analyze each sample automatically to ensure quality.
+                      </p>
+
+                      <!-- Registration Progress -->
+                      <div id="registration-container">
+                        <div class="mb-2">
+                          <div id="registration-progress-bar" class="progress" style="height: 6px;">
+                            <div id="registration-progress" class="progress-bar" role="progressbar" style="width: 0%;"
+                              aria-valuenow="0" aria-valuemin="0" aria-valuemax="4"></div>
+                          </div>
+                        </div>
+                        <div id="registration-sample-count" class="text-center small fw-semibold text-primary">Samples
+                          Captured: 0 / 4</div>
+                      </div>
+
+                      <!-- Instruction Text -->
+                      <div id="registration-instruction" class="alert alert-info small py-2 px-3 mb-3">
+                        Sample 1: Look straight at the camera
+                      </div>
+
+                      <!-- Fullscreen Camera Button -->
+                      <div class="text-center mb-3">
+                        <button type="button" class="btn btn-primary btn-lg" id="start-face-registration-btn">
+                          <i class="bi bi-camera-fill me-2"></i>Start Face Registration
+                        </button>
+                      </div>
+
+                      <!-- Registration Result Alert -->
+                      <div id="registration-result" class="d-none"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-7 d-none" id="registration-camera-section">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Face Registration</h6>
+                      <div id="registration-camera-wrap" class="bg-dark rounded-circle border-0 mb-4">
+                        <video id="registration-camera" autoplay muted playsinline class="mirror-view"></video>
+                        <div id="registration-face-guide-overlay" class="d-none">
+                          <div class="border-3"></div>
+                          <div class="registration-guide-text" id="registration-face-guide-text">Align face in circle
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Registration Controls (moved to fullscreen footer) -->
+                      <div id="registration-camera-controls" class="registration-camera-controls">
+                        <div id="capture-guidance" class="text-center small mb-2"></div>
+                        <div id="capture-progress" class="text-center small fw-semibold text-primary mb-3">Samples
+                          Captured: 0 / 4</div>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                          <button type="button" class="btn btn-success btn-lg flex-grow-1" id="registration-capture-btn"
+                            disabled>
+                            <i class="bi bi-camera-fill me-2"></i>Capture Sample
+                          </button>
+                          <button type="button" class="btn btn-outline-secondary btn-lg" id="registration-cancel-btn">
+                            <i class="bi bi-x-lg me-2"></i>Cancel
+                          </button>
+                        </div>
+                        <!-- Registration Status -->
+                        <div id="registration-status" class="text-center small text-muted mt-2"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12 col-lg-5">
+                  <!-- Instructions -->
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Instructions</h6>
+                      <ul class="small mb-0">
+                        <li>Ensure good lighting — avoid backlit environments.</li>
+                        <li>Remove masks, sunglasses, and caps.</li>
+                        <li>Center your face within the guide circle.</li>
+                        <li>Hold the camera steady — blurry captures are rejected.</li>
+                        <li>Only one person should be visible in the frame.</li>
+                        <li>Minimum <strong>4 captures</strong> required for full registration.</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Registration Status -->
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Registration Status</h6>
+                      <p class="small mb-2">
+                        Status:
+                        <span id="face-registration-status" class="badge bg-warning text-dark">Not Registered</span>
+                      </p>
+                      <p class="small text-muted mb-2" id="face-update-limit-info">
+                        Monthly face update limit: 2 updates.
+                      </p>
+                      <div id="registration-success" class="alert alert-success small d-none">
+                        Face registered successfully. You can now mark attendance.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ATTENDANCE MARKING — Sequential Verification Flow -->
+            <section id="attendance-marking" class="page-section page-hidden" data-roles="student">
+              <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 col-xl-7">
+
+                  <!-- Step Progress Bar -->
+                  <div class="verification-steps-bar mb-4">
+                    <div class="verification-step" data-vstep="otp">
+                      <div class="vstep-icon"><i class="bi bi-key"></i></div>
+                      <div class="vstep-label">OTP</div>
+                    </div>
+                    <div class="vstep-line"></div>
+                    <div class="verification-step" data-vstep="location">
+                      <div class="vstep-icon"><i class="bi bi-geo-alt"></i></div>
+                      <div class="vstep-label">Location</div>
+                    </div>
+                    <div class="vstep-line"></div>
+                    <div class="verification-step" data-vstep="face">
+                      <div class="vstep-icon"><i class="bi bi-shield-check"></i></div>
+                      <div class="vstep-label">Face</div>
+                    </div>
+                  </div>
+
+                  <!-- STAGE 1: OTP Entry -->
+                  <div id="att-stage-otp" class="att-stage">
+                    <div class="card">
+                      <div class="card-body text-center py-4">
+                        <div class="mb-3">
+                          <i class="bi bi-key" style="font-size: 2.5rem; color: var(--bs-primary);"></i>
+                        </div>
+                        <h5 class="card-title mb-1">Enter Class OTP</h5>
+                        <p class="text-muted small mb-3">Enter the 6-digit OTP shared by your faculty</p>
+                        <form id="otp-form" class="small" style="max-width: 320px; margin: 0 auto;">
+                          <div class="mb-3">
+                            <input type="text" maxlength="6" class="form-control form-control-lg text-center fw-bold"
+                              id="otp-input" placeholder="● ● ● ● ● ●" required autocomplete="off" inputmode="numeric"
+                              style="letter-spacing: 0.5em; font-size: 1.4rem;">
+                          </div>
+                          <button type="submit" class="btn btn-primary w-100 mb-2" id="otp-submit-btn">
+                            <i class="bi bi-arrow-right me-1"></i>Validate OTP
+                          </button>
+                          <div id="otp-error" class="alert alert-danger small d-none mt-2" role="alert">
+                            Invalid or expired OTP.
+                          </div>
+                          <div id="otp-session-preview" class="alert alert-info small d-none mt-2 text-start"
+                            role="status">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                              <h6 class="mb-0" style="font-size: 0.85rem;"><i class="bi bi-info-circle me-1"></i>Session Preview</h6>
+                              <span class="badge bg-danger" id="student-otp-timer">09:59</span>
+                            </div>
+                            <hr class="my-1">
+                            <div id="otp-preview-extra-badge" class="badge bg-warning text-dark mb-1 d-none">EXTRA CLASS</div>
+                            <div class="mb-1"><strong>Subject:</strong> <span id="otp-preview-class">--</span></div>
+                            <div class="mb-1"><strong>Faculty:</strong> <span id="otp-preview-professor">--</span></div>
+                            <div class="mb-1"><strong>Scheduled:</strong> <span id="otp-preview-timing">--</span></div>
+                            <div id="otp-preview-reason-wrap" class="mt-1 d-none">
+                               <strong>Reason:</strong> <span id="otp-preview-reason">--</span>
+                            </div>
+                            <div class="mt-2 d-grid">
+                              <button type="button" class="btn btn-success btn-sm" id="otp-confirm-btn">
+                                <i class="bi bi-check-circle me-1"></i>Continue to Marking
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STAGE 2: Location Verification (auto-loading) -->
+                  <div id="att-stage-location" class="att-stage d-none">
+                    <div class="card">
+                      <div class="card-body text-center py-5">
+                        <div class="mb-3">
+                          <div class="spinner-border text-primary" role="status" id="location-spinner">
+                            <span class="visually-hidden">Verifying location...</span>
+                          </div>
+                          <i class="bi bi-geo-alt-fill d-none" id="location-done-icon" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <h5 class="card-title mb-1" id="location-stage-title">Verifying Location...</h5>
+                        <p class="text-muted small mb-0" id="location-stage-message">Checking your GPS coordinates
+                          against campus boundaries</p>
+                        <div id="location-stage-detail" class="small mt-2 d-none"></div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- STAGE 4: Face Verification -->
+                  <div id="att-stage-face" class="att-stage d-none">
+                    <div class="card">
+                      <div class="card-body">
+                        <div class="text-center mb-2">
+                          <h5 class="card-title mb-1">Face Verification</h5>
+                          <p class="text-muted small mb-0">Hold still while we verify your identity</p>
+                        </div>
+
+                        <div id="attendance-camera-wrap" class="bg-dark rounded-circle border-0 mb-4">
+                          <video id="attendance-camera" autoplay muted playsinline class="d-none mirror-view"></video>
+
+                          <!-- Face Guide Circle -->
+                          <div id="face-guide-overlay" class="d-none">
+                            <div class="border-3"></div>
+                            <div class="face-guide-text">Align face in circle</div>
+                          </div>
+
+                          <!-- Camera Placeholder -->
+                          <div id="attendance-placeholder"
+                            class="w-100 h-100 d-flex align-items-center justify-content-center text-muted small flex-column gap-2">
+                            <i class="bi bi-camera" style="font-size: 3rem;"></i>
+                            <p class="mb-0">Starting camera...</p>
+                          </div>
+
+                          <!-- Camera Error -->
+                          <div id="attendance-camera-error"
+                            class="position-absolute top-50 start-50 translate-middle text-center text-white d-none"
+                            style="z-index: 20; width: 90%; max-width: 320px;">
+                            <i class="bi bi-exclamation-triangle"
+                              style="font-size: 2.5rem; display: block; margin-bottom: 10px;"></i>
+                            <p class="mb-2 fw-semibold" id="camera-error-title">Camera Permission Needed</p>
+                            <small class="d-block mb-2" id="camera-error-message">Allow camera access to continue face
+                              verification</small>
+                            <small class="d-block text-warning mb-3" id="camera-error-instructions"></small>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                              <button type="button" class="btn btn-sm btn-light" id="retry-attendance-camera-btn">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Retry
+                              </button>
+                              <button type="button" class="btn btn-sm btn-outline-light" id="camera-help-btn">
+                                <i class="bi bi-question-circle me-1"></i>Help
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div id="attendance-camera-controls" class="attendance-camera-controls mb-3">
+                          <div id="attendance-guidance" class="small text-muted mb-3">
+                            Stay in frame while we complete verification.
+                          </div>
+
+                          <!-- Verification Progress -->
+                          <div id="verification-progress" class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                              <p class="small mb-0 text-muted">Verification Status</p>
+                              <span class="badge bg-light text-primary border" id="verification-attempts">Attempt
+                                1/3</span>
+                            </div>
+                            <div class="verification-progress">
+                              <div class="verification-progress-bar" id="verification-progress-bar"></div>
+                            </div>
+                            <div id="attendance-status" class="text-center small mt-2 text-muted fw-semibold">
+                              Scanning...</div>
+                          </div>
+
+                          <div class="d-none">
+                            <div id="match-score">--</div>
+                          </div>
+
+                          <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <button type="button" class="btn btn-primary btn-sm d-none" id="face-verify-btn" disabled
+                              title="Verify your face">
+                              <i class="bi bi-person-check-fill me-1"></i>Verify Face
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm"
+                              id="attendance-switch-camera-btn" title="Switch Camera">
+                              <i class="bi bi-camera-fill me-1"></i>Switch
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STAGE 5: Final Result -->
+                  <div id="att-stage-result" class="att-stage d-none">
+                    <div class="card">
+                      <div class="card-body text-center py-4">
+                        <div class="mb-3" id="result-icon-wrap">
+                          <i class="bi bi-check-circle-fill text-success" style="font-size: 3.5rem;"
+                            id="result-success-icon"></i>
+                          <i class="bi bi-x-circle-fill text-danger d-none" style="font-size: 3.5rem;"
+                            id="result-fail-icon"></i>
+                        </div>
+                        <h5 class="card-title mb-1" id="result-title">Attendance Marked</h5>
+                        <div id="attendance-result" class="small mb-3"></div>
+                        <div id="result-details" class="text-start small bg-light rounded p-3 mb-3 d-none">
+                          <div class="row g-2">
+                            <div class="col-6"><span class="text-muted">Match Score:</span></div>
+                            <div class="col-6 fw-semibold" id="result-match-score">--</div>
+                            <div class="col-6"><span class="text-muted">Location:</span></div>
+                            <div class="col-6 fw-semibold" id="result-location">--</div>
+                            <div class="col-6"><span class="text-muted">Time:</span></div>
+                            <div class="col-6 fw-semibold" id="result-time">--</div>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="att-restart-btn">
+                          <i class="bi bi-arrow-counterclockwise me-1"></i>Mark Another Attendance
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- NOTE -->
+                  <p class="small text-muted mt-2 text-center">
+                    <i class="bi bi-info-circle me-1"></i>Multiple submissions are not allowed. Once attendance is
+                    marked, this session will be locked.
+                  </p>
+
+                </div>
+              </div>
+            </section>
+
+            <!-- ATTENDANCE HISTORY -->
+            <section id="attendance-history-page" class="page-section page-hidden" data-roles="student,faculty">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Attendance History</h6>
+                    <button class="btn btn-outline-secondary btn-sm" id="export-attendance-btn">
+                      <i class="bi bi-download me-1"></i>Export
+                    </button>
+                  </div>
+
+                  <form class="row g-2 small mb-3" id="attendance-filter-form">
+                    <div class="col-12 col-md-3">
+                      <label class="form-label">Range</label>
+                      <select class="form-select form-select-sm" id="filter-range">
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="all">All</option>
+                      </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <label class="form-label">From</label>
+                      <input type="date" class="form-control form-control-sm" id="filter-from">
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <label class="form-label">To</label>
+                      <input type="date" class="form-control form-control-sm" id="filter-to">
+                    </div>
+                    <div class="col-12 col-md-2">
+                      <label class="form-label">Subject / Class</label>
+                      <select class="form-select form-select-sm" id="filter-subject">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-md-1 d-flex align-items-end">
+                      <button type="submit" class="btn btn-primary btn-sm w-100">Apply Filters</button>
+                    </div>
+                  </form>
+
+                  <div class="table-responsive small">
+                    <table class="table table-striped align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>Subject / Class</th>
+                          <th>Status</th>
+                          <th>Match Score</th>
+                        </tr>
+                      </thead>
+                      <tbody id="attendance-history-table">
+                        <tr>
+                          <td>24 Feb</td>
+                          <td>DS</td>
+                          <td><span class="badge bg-success-subtle text-success-emphasis">Present</span></td>
+                          <td>94%</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div id="no-history" class="text-center text-muted small py-3 d-none">
+                    No attendance records found for the selected period.
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- TIMETABLE -->
+            <section id="timetable-page" class="page-section page-hidden" data-roles="student,faculty,college_admin">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">Weekly Timetable</h6>
+                  <div class="table-responsive d-none d-md-block">
+                    <table class="table table-bordered align-middle small">
+                      <thead class="table-light">
+                        <tr>
+                          <th style="width:8%;">Time</th>
+                          <th>Mon</th>
+                          <th>Tue</th>
+                          <th>Wed</th>
+                          <th>Thu</th>
+                          <th>Fri</th>
+                          <th>Sat</th>
+                        </tr>
+                      </thead>
+                      <tbody id="timetable-grid">
+                        <tr>
+                          <td>09:00</td>
+                          <td class="timetable-cell timetable-current">
+                            <div class="fw-semibold">DS</div>
+                            <div class="text-muted">C-201</div>
+                            <span class="badge bg-success-subtle text-success-emphasis mt-1">Current</span>
+                          </td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="d-md-none" id="timetable-mobile">
+                    <div class="accordion small" id="timetableAccordion">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header" id="day1">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#day1Body">
+                            Monday
+                          </button>
+                        </h2>
+                        <div id="day1Body" class="accordion-collapse collapse" data-bs-parent="#timetableAccordion">
+                          <div class="accordion-body p-2">
+                            <div class="mb-2">
+                              <div class="fw-semibold">09:00 • DS • C-201</div>
+                              <span class="badge bg-success-subtle text-success-emphasis">Current</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="small mt-2" id="timetable-legend">
+                    <span class="badge bg-primary-subtle text-primary-emphasis me-1">Core</span> Subject type
+                    <span class="badge bg-success-subtle text-success-emphasis ms-2 me-1">Current</span> Current class
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: COLLEGES MANAGEMENT -->
+            <section id="colleges-mgmt-page" class="page-section page-hidden" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">College List</h6>
+                    <div class="d-flex gap-2 flex-wrap">
+                      <button class="btn btn-outline-secondary btn-sm" id="toggle-college-archive-btn" type="button">
+                        <i class="bi bi-archive me-1"></i>View Removed
+                      </button>
+                      <button class="btn btn-outline-primary btn-sm" id="create-college-admin-btn" type="button">
+                        <i class="bi bi-person-plus me-1"></i>Create College Admin
+                      </button>
+                      <button class="btn btn-primary btn-sm" id="add-college-btn" type="button">
+                        <i class="bi bi-building-add me-1"></i>Add College
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Name</th>
+                          <th>Code</th>
+                          <th class="d-none d-md-table-cell">Contact Email</th>
+                          <th class="d-none d-lg-table-cell">Phone</th>
+                          <th class="d-none d-sm-table-cell text-center">Students</th>
+                          <th class="d-none d-sm-table-cell text-center">Faculty</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="colleges-table-body">
+                        <tr>
+                          <td>Sample College</td>
+                          <td>SCL001</td>
+                          <td>admin@sample.edu</td>
+                          <td>+91-0000000000</td>
+                          <td>2,340</td>
+                          <td>145</td>
+                          <td><span class="badge bg-success-subtle text-success-emphasis">Active</span></td>
+                          <td>--</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">Selected College Data</h6>
+                  <div id="sa-college-detail-empty" class="text-muted small">Select a college to view complete data.
+                  </div>
+                  <div id="sa-college-detail-wrap" class="d-none">
+                    <div class="row g-2 mb-3 small">
+                      <div class="col-6 col-md-2"><span class="text-muted">Users</span>
+                        <div class="fw-semibold" id="sa-college-total-users">0</div>
+                      </div>
+                      <div class="col-6 col-md-2"><span class="text-muted">Students</span>
+                        <div class="fw-semibold" id="sa-college-students">0</div>
+                      </div>
+                      <div class="col-6 col-md-2"><span class="text-muted">Faculty</span>
+                        <div class="fw-semibold" id="sa-college-faculty">0</div>
+                      </div>
+                      <div class="col-6 col-md-2"><span class="text-muted">Admins</span>
+                        <div class="fw-semibold" id="sa-college-admins">0</div>
+                      </div>
+                      <div class="col-6 col-md-2"><span class="text-muted">Departments</span>
+                        <div class="fw-semibold" id="sa-college-departments">0</div>
+                      </div>
+                      <div class="col-6 col-md-2"><span class="text-muted">Courses</span>
+                        <div class="fw-semibold" id="sa-college-courses">0</div>
+                      </div>
+                    </div>
+                    <div class="table-responsive small">
+                      <table class="table table-sm align-middle mb-0">
+                        <thead class="table-light">
+                          <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                          </tr>
+                        </thead>
+                        <tbody id="sa-college-users-body">
+                          <tr>
+                            <td colspan="6" class="text-muted">No users found.</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: DEPARTMENT DATA -->
+            <section id="sa-departments-page" class="page-section d-none" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Department Data</h6>
+                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                      <select class="form-select form-select-sm" id="sa-dept-college-filter">
+                        <option value="">All Colleges</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" id="sa-dept-search"
+                        placeholder="Search department">
+                      <div class="form-check form-check-inline small mb-0">
+                        <input class="form-check-input" type="checkbox" id="sa-dept-include-removed">
+                        <label class="form-check-label" for="sa-dept-include-removed">Include removed colleges</label>
+                      </div>
+                      <button class="btn btn-outline-secondary btn-sm" id="sa-dept-refresh-btn" type="button">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>College</th>
+                          <th>Department</th>
+                          <th>Status</th>
+                          <th>Courses</th>
+                          <th>Students</th>
+                          <th>Faculty</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sa-departments-table-body">
+                        <tr>
+                          <td colspan="6" class="text-muted">Loading departments...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: STUDENT RECORDS -->
+            <section id="sa-students-page" class="page-section d-none" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Student Records</h6>
+                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                      <select class="form-select form-select-sm" id="sa-students-college-filter">
+                        <option value="">All Colleges</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" id="sa-students-search"
+                        placeholder="Search students">
+                      <div class="form-check form-check-inline small mb-0">
+                        <input class="form-check-input" type="checkbox" id="sa-students-include-archived">
+                        <label class="form-check-label" for="sa-students-include-archived">Include archived</label>
+                      </div>
+                      <div class="form-check form-check-inline small mb-0">
+                        <input class="form-check-input" type="checkbox" id="sa-students-include-removed">
+                        <label class="form-check-label" for="sa-students-include-removed">Include removed
+                          colleges</label>
+                      </div>
+                      <button class="btn btn-outline-secondary btn-sm" id="sa-students-refresh-btn" type="button">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>College</th>
+                          <th>User ID</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Department</th>
+                          <th>Year</th>
+                          <th>Sem</th>
+                          <th>Sec</th>
+                          <th>Status</th>
+                          <th>Archived</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sa-students-table-body">
+                        <tr>
+                          <td colspan="10" class="text-muted">Loading students...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: FACULTY RECORDS -->
+            <section id="sa-faculty-page" class="page-section d-none" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Faculty Records</h6>
+                    <div class="d-flex gap-2 flex-wrap align-items-center">
+                      <select class="form-select form-select-sm" id="sa-faculty-college-filter">
+                        <option value="">All Colleges</option>
+                      </select>
+                      <input type="text" class="form-control form-control-sm" id="sa-faculty-search"
+                        placeholder="Search faculty">
+                      <div class="form-check form-check-inline small mb-0">
+                        <input class="form-check-input" type="checkbox" id="sa-faculty-include-archived">
+                        <label class="form-check-label" for="sa-faculty-include-archived">Include archived</label>
+                      </div>
+                      <div class="form-check form-check-inline small mb-0">
+                        <input class="form-check-input" type="checkbox" id="sa-faculty-include-removed">
+                        <label class="form-check-label" for="sa-faculty-include-removed">Include removed
+                          colleges</label>
+                      </div>
+                      <button class="btn btn-outline-secondary btn-sm" id="sa-faculty-refresh-btn" type="button">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>College</th>
+                          <th>User ID</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Department</th>
+                          <th>Designation</th>
+                          <th>Status</th>
+                          <th>Archived</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sa-faculty-table-body">
+                        <tr>
+                          <td colspan="8" class="text-muted">Loading faculty...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: USERS OVERVIEW -->
+            <section id="users-overview-page" class="page-section d-none" data-roles="super_admin">
+              <div class="row g-3 mb-3">
+                <div class="col-6 col-md-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Students</p>
+                      <p class="fs-5 fw-semibold mb-0" id="sa-users-students-count">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Faculty</p>
+                      <p class="fs-5 fw-semibold mb-0" id="sa-users-faculty-count">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">College Admins</p>
+                      <p class="fs-5 fw-semibold mb-0" id="sa-users-college-admins-count">0</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <p class="small text-muted mb-1">Super Admins</p>
+                      <p class="fs-5 fw-semibold mb-0" id="sa-users-super-admins-count">0</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">Users Overview</h6>
+                  <div class="row g-2 mb-3 small">
+                    <div class="col-12 col-lg-4">
+                      <input type="text" class="form-control form-control-sm" id="sa-users-search"
+                        placeholder="Search by name, user ID, email">
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <select class="form-select form-select-sm" id="sa-users-college-filter">
+                        <option value="">All Colleges</option>
+                      </select>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <select class="form-select form-select-sm" id="sa-users-sort-by">
+                        <option value="college_asc">Sort: College A-Z</option>
+                        <option value="college_desc">Sort: College Z-A</option>
+                        <option value="name_asc">Sort: Name A-Z</option>
+                        <option value="name_desc">Sort: Name Z-A</option>
+                        <option value="recent_login">Sort: Recent Login</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-lg-2 d-flex gap-1">
+                      <button type="button" class="btn btn-outline-secondary btn-sm w-100"
+                        data-sa-role-filter="all">All</button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm w-100"
+                        data-sa-role-filter="college_admin">Admins</button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm w-100"
+                        data-sa-role-filter="faculty">Faculty</button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm w-100"
+                        data-sa-role-filter="student">Students</button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>User</th>
+                          <th>Email</th>
+                          <th>Role</th>
+                          <th>College</th>
+                          <th>Last Active</th>
+                          <th>Status</th>
+                          <th>College Assign</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="users-overview-table">
+                        <tr>
+                          <td>John Doe</td>
+                          <td>john@example.com</td>
+                          <td><span class="badge bg-primary-subtle text-primary-emphasis">Student</span></td>
+                          <td>Sample College</td>
+                          <td>5 min ago</td>
+                          <td><span class="badge bg-success-subtle text-success-emphasis">Active</span></td>
+                          <td>--</td>
+                          <td>--</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: PLATFORM ANALYTICS -->
+            <section id="platform-analytics-page" class="page-section d-none" data-roles="super_admin">
+              <div class="row g-3">
+                <div class="col-12 col-lg-7">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Attendance Sessions Trend</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center metric-chart-wrap"
+                        style="height: 220px;">
+                        <span class="text-muted small">[Line chart placeholder]</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-5">
+                  <div class="card mb-3">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Usage Breakdown</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center metric-chart-wrap"
+                        style="height: 140px;">
+                        <span class="text-muted small">[Donut chart placeholder]</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-body small">
+                      <h6 class="card-title mb-3">Key Metrics</h6>
+                      <div class="row g-2">
+                        <div class="col-6">
+                          <p class="text-muted mb-1">Peak Concurrency</p>
+                          <p class="fw-semibold mb-0">2,140 users</p>
+                        </div>
+                        <div class="col-6">
+                          <p class="text-muted mb-1">Avg. Response Time</p>
+                          <p class="fw-semibold mb-0">320 ms</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: SUBSCRIPTION / LICENSING -->
+            <section id="subscription-page" class="page-section d-none" data-roles="super_admin">
+              <div class="row g-3">
+                <div class="col-12 col-lg-5">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Subscription Overview</h6>
+                      <p class="small text-muted mb-1">Current Plan</p>
+                      <p class="fw-semibold mb-2">Enterprise</p>
+                      <p class="small mb-1">Licensed Colleges: <span class="fw-semibold">50</span></p>
+                      <p class="small mb-1">Seats Used: <span class="fw-semibold">42 / 50</span></p>
+                      <p class="small text-muted mb-3">Next billing on 01 Mar 2026</p>
+                      <button class="btn btn-outline-primary btn-sm">Manage Billing</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-7">
+                  <div class="card h-100">
+                    <div class="card-body">
+                      <h6 class="card-title mb-3">Revenue Overview</h6>
+                      <div
+                        class="bg-body-tertiary rounded d-flex align-items-center justify-content-center metric-chart-wrap"
+                        style="height: 220px;">
+                        <span class="text-muted small">[Revenue trend placeholder]</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: AUDIT LOGS -->
+            <section id="audit-logs-page" class="page-section d-none" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2 small">
+                    <h6 class="card-title mb-0">Audit Logs</h6>
+                    <div class="d-flex gap-2">
+                      <input type="date" class="form-control form-control-sm" id="audit-filter-from">
+                      <input type="date" class="form-control form-control-sm" id="audit-filter-to">
+                      <input type="text" class="form-control form-control-sm" id="audit-filter-action"
+                        placeholder="Action">
+                      <select class="form-select form-select-sm" id="audit-filter-role">
+                        <option value="">All roles</option>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="college_admin">College Admin</option>
+                        <option value="super_admin">Super Admin</option>
+                      </select>
+                      <button type="button" class="btn btn-outline-secondary btn-sm"
+                        id="audit-filter-apply">Apply</button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Time</th>
+                          <th>User</th>
+                          <th>Role</th>
+                          <th>Action</th>
+                          <th>Details</th>
+                        </tr>
+                      </thead>
+                      <tbody id="audit-logs-body">
+                        <tr>
+                          <td colspan="5" class="text-muted">Loading logs...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- SUPER ADMIN: SETTINGS -->
+            <section id="settings-page" class="page-section d-none" data-roles="super_admin">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">Platform Settings</h6>
+                  <form class="small row g-3" id="platform-settings-form">
+                    <div class="col-md-4">
+                      <label class="form-label">Default Timezone</label>
+                      <select class="form-select form-select-sm" id="platform-timezone">
+                        <option>IST (UTC+05:30)</option>
+                        <option>UTC</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Session Timeout (minutes)</label>
+                      <input type="number" class="form-control form-control-sm" id="platform-session-timeout"
+                        value="30">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Max Login Attempts</label>
+                      <input type="number" class="form-control form-control-sm" id="platform-max-attempts" value="5">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label">Maintenance Message</label>
+                      <textarea class="form-control form-control-sm" rows="2"
+                        id="platform-maintenance-message"></textarea>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                      <button type="submit" class="btn btn-primary btn-sm">Save Settings</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </section>
+
+            <!-- COLLEGE ADMIN: MANAGEMENT PAGES -->
+            <section id="students-mgmt-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Students Management</h6>
+                    <div class="d-flex gap-2">
+                      <button type="button" class="btn btn-outline-secondary btn-sm"
+                        id="download-student-sample-btn"><i class="bi bi-download me-1"></i>Sample CSV</button>
+                      <button type="button" class="btn btn-outline-primary btn-sm" id="upload-student-csv-btn"><i
+                          class="bi bi-cloud-upload me-1"></i>Import CSV</button>
+                      <button class="btn btn-primary btn-sm" id="add-student-btn"><i
+                          class="bi bi-person-plus me-1"></i>Add Student</button>
+                      <input type="file" id="student-csv-upload-input" class="d-none" accept=".csv,text/csv">
+                    </div>
+                  </div>
+                  <div class="alert alert-info small py-2 px-3 mb-3">
+                    CSV columns:
+                    <code>name,student_id,email,department,course_name,year,semester,section,password</code>.
+                    <span class="d-block mt-1"><code>name</code> is required. <code>student_id</code> (Login ID)
+                      if blank, auto-generated. <code>password</code> if blank, default
+                      <code>Student@123</code>.</span>
+                    <span class="d-block mt-1">Excel me file bana kar <code>CSV UTF-8 (Comma delimited)</code> ya
+                      <code>CSV (Comma delimited)</code> me save karke upload karein.</span>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Department</th>
+                          <th>Year</th>
+                          <th>Semester</th>
+                          <th>Section</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="students-mgmt-table">
+                        <tr>
+                          <td>STU12345</td>
+                          <td>John Doe</td>
+                          <td>CSE</td>
+                          <td>3rd</td>
+                          <td>5</td>
+                          <td>A</td>
+                          <td><span class="badge bg-success-subtle text-success-emphasis">Active</span></td>
+                          <td>--</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="faculty-mgmt-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Faculty Management</h6>
+                    <button class="btn btn-primary btn-sm" id="add-faculty-btn"><i
+                        class="bi bi-person-workspace me-1"></i>Add Faculty</button>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Department</th>
+                          <th>Email</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="faculty-mgmt-table">
+                        <tr>
+                          <td>FAC102</td>
+                          <td>Dr. Jane Smith</td>
+                          <td>CSE</td>
+                          <td>jane.smith@example.com</td>
+                          <td><span class="badge bg-success-subtle text-success-emphasis">Active</span></td>
+                          <td>--</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="departments-courses-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body small">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Departments & Courses</h6>
+                    <button class="btn btn-primary btn-sm" id="add-dept-course-btn"><i
+                        class="bi bi-plus-lg me-1"></i>Add Department / Course</button>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-12 col-lg-4">
+                      <h6 class="small text-muted mb-2">Departments</h6>
+                      <ul class="list-group list-group-flush" id="departments-list">
+                        <li class="list-group-item px-0 text-muted">No departments loaded.</li>
+                      </ul>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                      <h6 class="small text-muted mb-2">Courses (CSE)</h6>
+                      <ul class="list-group list-group-flush" id="courses-list">
+                        <li class="list-group-item px-0 text-muted">No courses loaded.</li>
+                      </ul>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="small text-muted mb-0" id="subjects-title">Subjects</h6>
+                        <button class="btn btn-outline-primary btn-sm" id="add-subject-btn" type="button">Add
+                          Subject</button>
+                      </div>
+                      <ul class="list-group list-group-flush" id="subjects-list">
+                        <li class="list-group-item px-0 text-muted">Select a course to view subjects.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="college-archive-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body small">
+                  <h6 class="card-title mb-3">Archive</h6>
+                  <p class="text-muted small">
+                    Archived items are kept for reference and can be restored where allowed. Data shown here is scoped
+                    to your college only.
+                  </p>
+                  <ul class="nav nav-pills mb-3" id="archive-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="archive-users-tab" data-bs-toggle="tab"
+                        data-bs-target="#archive-users-pane" type="button" role="tab">
+                        Users
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="archive-depts-tab" data-bs-toggle="tab"
+                        data-bs-target="#archive-depts-pane" type="button" role="tab">
+                        Departments
+                      </button>
+                    </li>
+                  </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane fade show active" id="archive-users-pane" role="tabpanel"
+                      aria-labelledby="archive-users-tab">
+                      <div class="table-responsive small">
+                        <table class="table align-middle mb-0">
+                          <thead class="table-light">
+                            <tr>
+                              <th>ID</th>
+                              <th>Name</th>
+                              <th>Role</th>
+                              <th>Email</th>
+                              <th>Archived At</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody id="archive-users-table">
+                            <tr>
+                              <td colspan="6" class="text-muted">No archived users.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="tab-pane fade" id="archive-depts-pane" role="tabpanel"
+                      aria-labelledby="archive-depts-tab">
+                      <div class="table-responsive small">
+                        <table class="table align-middle mb-0">
+                          <thead class="table-light">
+                            <tr>
+                              <th>ID</th>
+                              <th>Department</th>
+                              <th>Status</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody id="archive-depts-table">
+                            <tr>
+                              <td colspan="4" class="text-muted">No archived departments.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="timetable-mgmt-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body small">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Timetable Management</h6>
+                    <div class="d-flex gap-2">
+                      <button type="button" class="btn btn-outline-secondary btn-sm"
+                        id="download-timetable-sample-btn"><i class="bi bi-download me-1"></i>Sample CSV</button>
+                      <button type="button" class="btn btn-outline-primary btn-sm" id="upload-timetable-btn"><i
+                          class="bi bi-cloud-upload me-1"></i>Upload Timetable</button>
+                      <button type="button" class="btn btn-primary btn-sm" id="add-timetable-btn"><i
+                          class="bi bi-plus-lg me-1"></i>Add Row</button>
+                      <input type="file" id="timetable-upload-input" class="d-none" accept=".csv,text/csv">
+                    </div>
+                  </div>
+                  <p class="text-muted mb-2">Filter by department, year, semester, and section to manage timetable.</p>
+                  <div class="alert alert-info small py-2 px-3 mb-3">
+                    Excel/CSV columns:
+                    <code>dept_name,course_name,year,semester,section,faculty_unique_id,day_of_week,start_time,end_time,subject</code>.
+                    <span class="d-block mt-1">Use <code>Monday</code> or <code>1</code> for day, and time as
+                      <code>09:00</code> or <code>09:00:00</code>.</span>
+                    <span class="d-block mt-1">Excel me file bana kar <code>CSV UTF-8 (Comma delimited)</code> ya
+                      <code>CSV (Comma delimited)</code> me save karke upload karein.</span>
+                  </div>
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                      <label class="form-label">Department</label>
+                      <select class="form-select form-select-sm" id="tt-filter-dept">
+                        <option value="">All Departments</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Year</label>
+                      <select class="form-select form-select-sm" id="tt-filter-year">
+                        <option value="">All Years</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Semester</label>
+                      <select class="form-select form-select-sm" id="tt-filter-semester">
+                        <option value="">All Semesters</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Section</label>
+                      <select class="form-select form-select-sm" id="tt-filter-section">
+                        <option value="">All Sections</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="bg-body-tertiary rounded d-flex align-items-center justify-content-center py-4"
+                    data-empty-state>
+                    <div class="text-center">
+                      <i class="bi bi-calendar-x fs-2 mb-2"></i>
+                      <p class="text-muted mb-0">No timetable uploaded for this section.</p>
+                    </div>
+                  </div>
+                  <div class="table-responsive mt-3 small">
+                    <table class="table align-middle mb-0">
+                      <tbody id="timetable-mgmt-table"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="attendance-reports-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body small">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Attendance Reports</h6>
+                    <div class="d-flex gap-2">
+                      <button class="btn btn-outline-secondary btn-sm" id="admin-export-pdf-btn"><i
+                          class="bi bi-file-pdf me-1"></i>Export PDF</button>
+                      <button class="btn btn-outline-success btn-sm" id="admin-export-csv-btn"><i
+                          class="bi bi-file-earmark-spreadsheet me-1"></i>Export CSV</button>
+                    </div>
+                  </div>
+                  <form class="row g-2 mb-3" id="admin-attendance-filter-form">
+                    <div class="col-md-2">
+                      <label class="form-label">Range</label>
+                      <select class="form-select form-control-sm" id="admin-filter-range">
+                        <option value="all">This Semester</option>
+                        <option value="today">Today</option>
+                        <option value="yesterday">Yesterday</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Department</label>
+                      <select class="form-select form-control-sm" id="admin-filter-dept">
+                        <option value="">All Departments</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Year</label>
+                      <select class="form-select form-control-sm" id="admin-filter-year">
+                        <option value="">All Years</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Semester</label>
+                      <select class="form-select form-control-sm" id="admin-filter-semester">
+                        <option value="">All Semesters</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Section</label>
+                      <select class="form-select form-control-sm" id="admin-filter-section">
+                        <option value="">All Sections</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">From</label>
+                      <input type="date" class="form-control form-control-sm" id="admin-filter-from">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label">To</label>
+                      <input type="date" class="form-control form-control-sm" id="admin-filter-to">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                      <button type="submit" class="btn btn-primary btn-sm w-100">Apply</button>
+                    </div>
+                  </form>
+                  <div class="d-flex flex-wrap gap-2 mb-3 small">
+                    <span class="badge bg-success-subtle text-success-emphasis">>=75%: <span
+                        id="admin-present-count">0</span></span>
+                    <span class="badge bg-danger-subtle text-danger-emphasis">&lt;75%: <span
+                        id="admin-absent-count">0</span></span>
+                    <span class="badge bg-secondary-subtle text-secondary-emphasis">Total Students: <span
+                        id="admin-total-count">0</span></span>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Student</th>
+                          <th>Class</th>
+                          <th>Present/Total</th>
+                          <th>Percentage</th>
+                          <th>Label</th>
+                          <th>Department</th>
+                          <th>Year/Sem</th>
+                          <th>Section</th>
+                        </tr>
+                      </thead>
+                      <tbody id="attendance-reports-table">
+                      </tbody>
+                    </table>
+                  </div>
+                  <div id="no-admin-reports" class="text-center text-muted small py-3 d-none">
+                    No attendance records found for selected range.
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="college-settings-page" class="page-section d-none" data-roles="college_admin">
+              <div class="card">
+                <div class="card-body small">
+                  <h6 class="card-title mb-3">College Settings</h6>
+                  <form class="row g-3" id="college-settings-form">
+                    <div class="col-md-6">
+                      <label class="form-label">College Name</label>
+                      <input type="text" class="form-control form-control-sm" id="college-settings-name"
+                        value="Sample College">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Short Code</label>
+                      <input type="text" class="form-control form-control-sm" id="college-settings-short-code"
+                        value="SCL001">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Contact Email</label>
+                      <input type="email" class="form-control form-control-sm" id="college-settings-email"
+                        value="admin@example.com">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Contact Phone</label>
+                      <input type="text" class="form-control form-control-sm" id="college-settings-phone"
+                        value="+91-9876543210">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">College Logo</label>
+                      <input type="file" class="form-control form-control-sm" id="college-settings-logo-input"
+                        accept="image/png,image/jpeg,image/webp">
+                      <div class="form-text">PNG, JPG or WEBP. Max 2 MB.</div>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                      <img id="college-settings-logo-preview" src="assets/img/logo-placeholder.svg"
+                        alt="College Logo Preview" class="border rounded p-1 bg-white"
+                        style="width:64px;height:64px;object-fit:contain;">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Latitude</label>
+                      <input type="number" step="0.00000001" class="form-control form-control-sm"
+                        id="college-settings-lat" placeholder="e.g. 19.076012">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Longitude</label>
+                      <input type="number" step="0.00000001" class="form-control form-control-sm"
+                        id="college-settings-lng" placeholder="e.g. 72.877604">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Attendance Radius (meters)</label>
+                      <input type="number" min="1" class="form-control form-control-sm" id="college-settings-radius"
+                        placeholder="200">
+                    </div>
+                    <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                      <div class="form-text">
+                        Leave latitude & longitude empty to disable location verification. Default radius is 200 meters.
+                      </div>
+                      <button type="button" class="btn btn-outline-secondary btn-sm"
+                        id="college-settings-use-location-btn">
+                        <i class="bi bi-geo-alt me-1"></i>Use Current Location
+                      </button>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                      <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </section>
+
+            <!-- NOTICES (COLLEGE ADMIN / FACULTY / STUDENT) -->
+            <section id="notices-page" class="page-section d-none" data-roles="college_admin,faculty,student">
+              <div class="card">
+                <div class="card-body small">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h6 class="card-title mb-0">Notices</h6>
+                    <div class="d-flex gap-2 align-items-center flex-wrap">
+                      <div class="d-flex gap-2 align-items-center d-none" id="notices-admin-filters">
+                        <div class="form-check form-check-inline mb-0">
+                          <input class="form-check-input" type="checkbox" id="notices-include-archived">
+                          <label class="form-check-label" for="notices-include-archived">Include archived</label>
+                        </div>
+                        <div class="form-check form-check-inline mb-0">
+                          <input class="form-check-input" type="checkbox" id="notices-include-expired">
+                          <label class="form-check-label" for="notices-include-expired">Include expired</label>
+                        </div>
+                      </div>
+                      <button class="btn btn-primary btn-sm d-none" id="create-notice-btn" type="button">
+                        <i class="bi bi-send me-1"></i>Send Notice
+                      </button>
+                      <button class="btn btn-outline-secondary btn-sm" id="refresh-notices-btn" type="button">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>Title</th>
+                          <th>Audience</th>
+                          <th>Message</th>
+                          <th>Expires</th>
+                          <th>From</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="notices-table-body">
+                        <tr>
+                          <td colspan="7" class="text-muted">Loading notices...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- FACULTY: MY CLASSES / START SESSION / GENERATE OTP -->
+            <section id="my-classes-page" class="page-section d-none" data-roles="faculty">
+              <div class="card">
+                <div class="card-body">
+                  <h6 class="card-title mb-3">My Classes</h6>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Day</th>
+                          <th>Time</th>
+                          <th>Subject</th>
+                          <th>Section</th>
+                          <th>Room</th>
+                        </tr>
+                      </thead>
+                      <tbody id="faculty-classes-table">
+                        <tr>
+                          <td>Mon</td>
+                          <td>09:00 - 10:00</td>
+                          <td>Data Structures</td>
+                          <td>CSE 3A</td>
+                          <td>C-201</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="dept-students-page" class="page-section d-none" data-roles="faculty">
+              <div class="card">
+                <div class="card-body small">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div>
+                      <h6 class="card-title mb-0">Department Students</h6>
+                      <div class="text-muted small" id="faculty-students-dept-label"></div>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm" id="faculty-students-refresh-btn" type="button">
+                      <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                    </button>
+                  </div>
+                  <div class="row g-2 mb-3">
+                    <div class="col-md-4">
+                      <label class="form-label">Search</label>
+                      <input type="text" class="form-control form-control-sm" id="faculty-students-search"
+                        placeholder="Name / ID / email / course">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Year</label>
+                      <select class="form-select form-select-sm" id="faculty-students-year">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Semester</label>
+                      <select class="form-select form-select-sm" id="faculty-students-semester">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label">Section</label>
+                      <select class="form-select form-select-sm" id="faculty-students-section">
+                        <option value="">All</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="table-responsive small">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Student</th>
+                          <th>Email</th>
+                          <th>Course</th>
+                          <th>Year/Sem</th>
+                          <th>Section</th>
+                          <th>Face</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="faculty-students-table-body">
+                        <tr>
+                          <td colspan="7" class="text-muted">Loading students...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section id="start-attendance-page" class="page-section d-none" data-roles="faculty">
+              <div class="card">
+                <div class="card-body small">
+                  <h6 class="card-title mb-3">Start Attendance Session</h6>
+                  <form class="row g-3">
+                    <div class="col-md-4">
+                      <label class="form-label">Class</label>
+                      <select class="form-select form-select-sm" id="start-session-class-select">
+                        <option value="">Select class</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Date</label>
+                      <input type="date" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label">Slot</label>
+                      <select class="form-select form-select-sm">
+                        <option>09:00 - 10:00</option>
+                      </select>
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                      <div class="d-flex gap-2 flex-wrap justify-content-end w-100">
+                        <button type="button" class="btn btn-primary btn-sm" id="start-session-btn">
+                          <i class="bi bi-play-circle me-1"></i>Start Scheduled Session
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm" id="start-session-extra-btn">
+                          <i class="bi bi-lightning-charge me-1"></i>Start Extra Class + Reason
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </section>
+
+            <section id="generate-otp-page" class="page-section d-none" data-roles="faculty">
+              <div class="card">
+                <div class="card-body small">
+                  <h6 class="card-title mb-3">Generate OTP</h6>
+                  <p class="text-muted mb-2">Select an active class slot to generate OTP.</p>
+                  <div class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                      <label class="form-label">Class Slot</label>
+                      <select class="form-select form-select-sm" id="generate-page-class-select">
+                        <option value="">Select class slot</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm w-100" id="generate-page-otp-btn">
+                          <i class="bi bi-shield-lock me-1"></i>Generate Live OTP
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm w-100"
+                          id="generate-page-otp-extra-btn">
+                          <i class="bi bi-lightning-charge me-1"></i>Generate Extra Class OTP
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="border rounded py-2 px-3 text-center d-none" id="generate-page-otp-wrapper">
+                        <div class="text-muted small mb-1">Current OTP</div>
+                        <div class="fw-semibold fs-5" id="generate-page-otp">--</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- UNAUTHORIZED PAGE -->
+            <section id="unauthorized-page" class="page-section page-hidden">
+              <div class="card border-0 bg-body-tertiary">
+                <div class="card-body text-center py-5">
+                  <i class="bi bi-shield-lock fs-1 text-warning mb-3"></i>
+                  <h5 class="fw-semibold mb-2">Unauthorized Access</h5>
+                  <p class="text-muted mb-3 small">
+                    You do not have permission to view this page.
+                  </p>
+                  <button class="btn btn-primary btn-sm" data-nav="dashboard">
+                    Go to Dashboard
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="saCollegeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h6 class="modal-title fw-semibold" id="saCollegeModalTitle">
+            <i class="bi bi-building-add me-2"></i>Add College
+          </h6>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="sa-college-form" class="modal-body small">
+          <input type="hidden" id="sa-college-id">
+          <div class="row g-3">
+
+            <!-- College Info Section -->
+            <div class="col-12">
+              <p class="text-muted mb-2 small"><i class="bi bi-info-circle me-1"></i>Fill in the college details below.
+                A College Admin account will be automatically created with the credentials you set.</p>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">College Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm" id="sa-college-name"
+                placeholder="e.g. SRM Institute of Technology" required>
+            </div>
+            <div class="col-md-4 col-6">
+              <label class="form-label fw-semibold">Short Code</label>
+              <input type="text" class="form-control form-control-sm" id="sa-college-short-code" placeholder="e.g. SRM"
+                maxlength="10">
+            </div>
+            <div class="col-md-4 col-6">
+              <label class="form-label fw-semibold">Status</label>
+              <select class="form-select form-select-sm" id="sa-college-status">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="col-md-4 col-12">
+              <label class="form-label fw-semibold">Contact Phone</label>
+              <input type="text" class="form-control form-control-sm" id="sa-college-phone"
+                placeholder="+91 9876543210">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Contact Email</label>
+              <input type="email" class="form-control form-control-sm" id="sa-college-email"
+                placeholder="admin@college.edu">
+            </div>
+
+            <!-- Logo Section -->
+            <div class="col-12">
+              <label class="form-label fw-semibold">College Logo</label>
+              <input type="file" class="form-control form-control-sm" id="sa-college-logo-input"
+                accept="image/png,image/jpeg,image/webp">
+              <div class="form-text">PNG, JPG or WEBP. Max 2 MB.</div>
+            </div>
+            <div class="col-12 d-flex align-items-center gap-2">
+              <img id="sa-college-logo-preview" src="assets/img/logo-placeholder.svg" alt="College logo preview"
+                class="border rounded p-1 bg-white" style="width:56px;height:56px;object-fit:contain;">
+              <span class="text-muted small">Logo preview</span>
+            </div>
+
+            <!-- College Admin Credentials Section -->
+            <div class="col-12" id="sa-college-admin-fields">
+              <div class="border border-primary border-opacity-25 rounded p-3" style="background:rgba(13,110,253,0.04)">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <div>
+                    <div class="fw-semibold text-primary"><i class="bi bi-person-badge me-1"></i>College Admin Login
+                      Credentials</div>
+                    <div class="text-muted small">Auto-generated credentials. <strong>You can also type
+                        manually.</strong> Note them down before saving.</div>
+                  </div>
+                  <button type="button" class="btn btn-outline-primary btn-sm" id="sa-college-admin-regen-btn"
+                    title="Regenerate credentials">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Regenerate
+                  </button>
+                </div>
+                <div class="row g-2">
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Login ID <span class="text-danger">*</span></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text"><i class="bi bi-person"></i></span>
+                      <input type="text" class="form-control form-control-sm font-monospace" id="sa-college-admin-id"
+                        placeholder="Auto-generated or type manually">
+                    </div>
+                    <div class="form-text">Auto-generated — click to edit manually</div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                      <input type="text" class="form-control form-control-sm font-monospace"
+                        id="sa-college-admin-password" placeholder="Auto-generated or type manually">
+                    </div>
+                    <div class="form-text">Auto-generated — click to edit manually</div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Admin Name</label>
+                    <input type="text" class="form-control form-control-sm" id="sa-college-admin-name"
+                      placeholder="e.g. Admin Name (optional)">
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Admin Email</label>
+                    <input type="email" class="form-control form-control-sm" id="sa-college-admin-email"
+                      placeholder="admin@college.edu (optional)">
+                  </div>
+                </div>
+                <div class="alert alert-info small mt-2 mb-0 py-1 px-2">
+                  <i class="bi bi-info-circle-fill me-1"></i>
+                  Credentials are auto-generated. You can <strong>edit them manually</strong> or click
+                  <strong>Regenerate</strong> for new ones. After saving, a credentials popup will appear.
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="sa-college-submit-btn">
+              <i class="bi bi-check2-circle me-1"></i>Save College &amp; Admin
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- College Welcome Popup (Login Notification) -->
+  <div id="college-welcome-popup" class="college-welcome-popup" aria-live="polite" aria-atomic="true">
+    <button class="cwp-close-btn" id="cwp-close-btn" aria-label="Close">&times;</button>
+    <div class="cwp-body">
+      <div class="cwp-icon">
+        <i class="bi bi-check-lg"></i>
+      </div>
+      <div class="cwp-content">
+        <div class="cwp-title">Logged In Successfully</div>
+        <div class="cwp-college-name">
+          <i class="bi bi-building"></i>
+          <span id="cwp-college-text">College Name</span>
+        </div>
+        <div class="cwp-user-name" id="cwp-user-text"></div>
+      </div>
+    </div>
+    <div class="cwp-progress">
+      <div class="cwp-progress-bar" id="cwp-progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="app-toast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-message">Action completed.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile sidebar backdrop -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+  <!-- PWA Install Prompt -->
+  <div id="app-install-prompt" class="app-install-prompt d-none" role="dialog" aria-live="polite" aria-hidden="true"
+    aria-label="Install AttendSmart app">
+    <div class="app-install-icon" aria-hidden="true">
+      <i class="bi bi-phone"></i>
+    </div>
+    <div class="app-install-content">
+      <div class="app-install-title">Install AttendSmart</div>
+      <div class="app-install-subtext" id="app-install-subtext">
+        Home screen par add karke faster open karein aur app-like experience paayen.
+      </div>
+      <div class="app-install-ios-help d-none" id="app-install-ios-help">
+        iPhone/iPad par: Share <i class="bi bi-box-arrow-up"></i> tap karein, phir <strong>Add to Home Screen</strong>
+        select karein.
+      </div>
+    </div>
+    <div class="app-install-actions">
+      <button type="button" class="btn btn-primary btn-sm" id="app-install-now-btn">
+        <i class="bi bi-download me-1"></i>Install
+      </button>
+      <button type="button" class="btn btn-outline-secondary btn-sm" id="app-install-later-btn">Later</button>
+      <button type="button" class="btn btn-link btn-sm text-muted p-0 app-install-close" id="app-install-close-btn"
+        aria-label="Close install prompt">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Session expired modal -->
+  <div class="modal fade" id="sessionExpiredModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <i class="bi bi-hourglass-split fs-1 text-warning mb-3"></i>
+          <h5 class="fw-semibold mb-2">Session Expired</h5>
+          <p class="text-muted small mb-3">
+            Your session has expired. Please log in again to continue.
+          </p>
+          <button class="btn btn-primary" id="session-relogin-btn">Return to Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm modal -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="confirmModalTitle">Confirm Action</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small" id="confirmModalBody">
+          Are you sure you want to proceed?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm" id="confirmModalConfirmBtn">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credentials modal -->
+  <div class="modal fade" id="credentialsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="credentialsModalTitle">Credentials</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body small">
+          <p class="text-muted small mb-2">Copy and share these credentials securely. Password is shown only once.</p>
+          <div class="border rounded bg-body-tertiary p-2">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="text-muted">Login ID</span>
+              <span class="fw-semibold" id="cred-userid">-</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted">Password</span>
+              <span class="fw-semibold" id="cred-password">-</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary btn-sm" id="cred-copy-btn">
+            <i class="bi bi-clipboard me-1"></i>Copy
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reusable form modal -->
+  <div class="modal fade" id="entityFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="entityFormTitle">Add</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="entityForm" class="modal-body small">
+          <div id="entityFormFields" class="row g-2"></div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm" id="entityFormSubmitBtn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Faculty: Student profile modal -->
+  <div class="modal fade" id="studentProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">Student Profile</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body small">
+          <div class="d-flex gap-3 align-items-start flex-wrap">
+            <img id="student-profile-photo" src="assets/img/avatar-placeholder.svg" alt="Student"
+              class="rounded border bg-white" style="width:72px;height:72px;object-fit:cover;">
+            <div class="flex-grow-1">
+              <table class="table table-sm mb-0">
+                <tbody>
+                  <tr>
+                    <th style="width:28%;">Name</th>
+                    <td id="student-profile-name">-</td>
+                  </tr>
+                  <tr>
+                    <th>Login ID</th>
+                    <td id="student-profile-unique-id">-</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td id="student-profile-email">-</td>
+                  </tr>
+                  <tr>
+                    <th>Status</th>
+                    <td id="student-profile-status">-</td>
+                  </tr>
+                  <tr>
+                    <th>Department</th>
+                    <td id="student-profile-dept">-</td>
+                  </tr>
+                  <tr>
+                    <th>Course</th>
+                    <td id="student-profile-course">-</td>
+                  </tr>
+                  <tr>
+                    <th>Year</th>
+                    <td id="student-profile-year">-</td>
+                  </tr>
+                  <tr>
+                    <th>Semester</th>
+                    <td id="student-profile-semester">-</td>
+                  </tr>
+                  <tr>
+                    <th>Section</th>
+                    <td id="student-profile-section">-</td>
+                  </tr>
+                  <tr>
+                    <th>Face Registered</th>
+                    <td id="student-profile-face">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen camera overlay (used for Face Registration + Face Verification) -->
+  <div id="camera-fullscreen-overlay" class="d-none" aria-hidden="true">
+    <div class="camera-fullscreen-header">
+      <div class="camera-fullscreen-title" id="camera-fullscreen-title">Camera</div>
+      <button type="button" class="btn btn-sm btn-outline-light" id="camera-fullscreen-close-btn"
+        aria-label="Close fullscreen camera">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div id="camera-fullscreen-body" class="camera-fullscreen-body"></div>
+    <div id="camera-fullscreen-footer" class="camera-fullscreen-footer d-none"></div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- face-api.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <!-- Face Verification Module -->
+  <script defer src="assets/js/face-verification.js?v=20260323-1"></script>
+  <!-- Face Registration Module -->
+  <script defer src="assets/js/face-registration.js?v=20260323-1"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- App JS -->
+  <script defer src="assets/js/app.js?v=20260323-1"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('[ServiceWorker] Registration successful with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.warn('[ServiceWorker] Registration failed:', error);
+          });
+      });
+    }
+  </script>
+
+  <!-- Camera Permission Helper Styles -->
+  <style>
+    @media (max-width: 576px) {
+      #attendance-camera-error {
+        padding: 20px !important;
+        max-width: 90vw !important;
+      }
+
+      #camera-error-instructions {
+        font-size: 0.75rem;
+        line-height: 1.5;
+      }
+
+      #camera-error-instructions strong {
+        display: block;
+        margin-top: 8px;
+        margin-bottom: 4px;
+      }
+    }
+
+    /* Camera error button styles */
+    #attendance-camera-error .btn {
+      font-size: 0.85rem;
+      padding: 0.35rem 0.75rem;
+    }
+
+    /* Improve camera permission help message visibility */
+    #camera-error-message {
+      line-height: 1.6;
+    }
+  </style>
+</body>
+
+</html>

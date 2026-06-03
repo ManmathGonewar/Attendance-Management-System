@@ -1,0 +1,1169 @@
+/* Face Verification Module Styles */
+
+/* === Sequential Verification Flow === */
+
+/* Step Progress Bar */
+.verification-steps-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 12px 8px;
+    background: var(--bs-body-bg, #fff);
+    border-radius: 12px;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+}
+
+.verification-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 56px;
+    transition: all 0.3s ease;
+}
+
+.vstep-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e9ecef;
+    color: #6c757d;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.vstep-label {
+    font-size: 0.7rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: color 0.3s ease;
+}
+
+.vstep-line {
+    flex: 1;
+    height: 2px;
+    background: #dee2e6;
+    min-width: 20px;
+    max-width: 60px;
+    margin: 0 4px;
+    margin-bottom: 20px;
+    transition: background 0.3s ease;
+}
+
+/* Active step */
+.verification-step.vstep-active .vstep-icon {
+    background: #0d6efd;
+    color: #fff;
+    border-color: rgba(13, 110, 253, 0.3);
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    animation: vstepPulse 2s ease-in-out infinite;
+}
+
+.verification-step.vstep-active .vstep-label {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* Completed step */
+.verification-step.vstep-completed .vstep-icon {
+    background: #28a745;
+    color: #fff;
+    border-color: transparent;
+}
+
+.verification-step.vstep-completed .vstep-label {
+    color: #28a745;
+}
+
+.vstep-line.vstep-line-done {
+    background: #28a745;
+}
+
+/* Failed step */
+.verification-step.vstep-failed .vstep-icon {
+    background: #dc3545;
+    color: #fff;
+}
+
+.verification-step.vstep-failed .vstep-label {
+    color: #dc3545;
+}
+
+@keyframes vstepPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(13, 110, 253, 0.08);
+    }
+}
+
+/* Loading spinner for verification */
+.verification-spinner {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #0d6efd;
+    border-radius: 50%;
+    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    margin: 30px auto;
+    box-shadow: 0 0 15px rgba(13, 110, 253, 0.2);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Progress bar for verification */
+.verification-progress {
+    width: 100%;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.verification-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0d6efd, #00d2ff);
+    border-radius: 10px;
+    transition: width 0.4s ease-out;
+    width: 0%;
+}
+
+/* Enhanced result alerts */
+.result-alert {
+    border-radius: 12px;
+    padding: 16px;
+    margin: 10px 0;
+    animation: alertSlideIn 0.4s ease-out;
+}
+
+@keyframes alertSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Stage transitions */
+.att-stage {
+    animation: stageSlideIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+@keyframes stageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Liveness Ring & Face Guide Enhancements */
+.liveness-ring {
+    width: min(70vw, 240px);
+    height: min(70vw, 240px);
+    border-radius: 50%;
+    border: 3px solid rgba(13, 110, 253, 0.4);
+    position: relative;
+    transition: border-color 0.5s ease, box-shadow 0.5s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: border-color, box-shadow;
+}
+
+.liveness-ring::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #0d6efd;
+    animation: spin 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Mobile adjustments for verification flow */
+@media (max-width: 768px) {
+    .verification-steps-bar {
+        padding: 8px 4px;
+        gap: 2px;
+    }
+
+    .verification-step {
+        min-width: 48px;
+    }
+
+    .vstep-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
+    .vstep-label {
+        font-size: 0.55rem;
+    }
+
+    .vstep-line {
+        min-width: 10px;
+    }
+
+    .liveness-ring {
+        width: min(65vw, 160px);
+        height: min(65vw, 160px);
+    }
+
+    .camera-fullscreen-header {
+        padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px;
+    }
+
+    .camera-fullscreen-title {
+        font-size: 0.9rem;
+    }
+
+    .verification-spinner {
+        width: 32px;
+        height: 32px;
+    }
+
+    .result-alert {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+}
+
+
+/* Circular Camera Container for Face Verification */
+#attendance-camera-wrap, #registration-camera-wrap {
+    width: min(85vw, 320px) !important;
+    height: min(85vw, 320px) !important;
+    margin: 0 auto 1.5rem;
+    border-radius: 50% !important;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 4px solid #fff;
+    transition: border-color 0.6s ease, box-shadow 0.6s ease, transform 0.3s ease;
+    will-change: border-color, box-shadow;
+}
+
+#attendance-camera-wrap::before, #registration-camera-wrap::before {
+    padding-top: 0 !important;
+}
+
+#attendance-camera, #registration-camera {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+}
+
+/* Fullscreen camera overlay */
+#camera-fullscreen-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+#camera-fullscreen-overlay.d-none {
+    display: none !important;
+}
+
+.camera-fullscreen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 10px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.camera-fullscreen-title {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    font-size: 0.95rem;
+}
+
+.camera-fullscreen-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.camera-fullscreen-body .ratio {
+    width: 100%;
+    max-width: 640px; /* Constrain video width on desktop */
+    height: auto;
+    max-height: 100%;
+    margin: 0 auto !important;
+    border-radius: 0.5rem !important; /* Slight rounding for a finished look */
+    --bs-aspect-ratio: auto;
+    overflow: hidden;
+}
+
+.camera-fullscreen-body .ratio::before {
+    padding-top: 0 !important;
+}
+
+.camera-fullscreen-body video {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - 180px); /* Keep inside viewport */
+    border-radius: 0.5rem !important;
+    transform: none !important;
+    object-fit: cover;
+}
+
+.camera-fullscreen-footer {
+    padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
+    color: #fff;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    max-height: 42vh;
+    overflow-y: auto;
+}
+
+.camera-fullscreen-footer .registration-camera-controls .d-flex {
+    gap: 0.45rem !important;
+}
+
+.camera-fullscreen-footer .registration-camera-controls .btn {
+    flex: 1 1 46%;
+    min-height: 2.4rem;
+}
+
+.camera-fullscreen-footer .registration-camera-controls #capture-guidance,
+.camera-fullscreen-footer .registration-camera-controls #capture-progress {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.camera-fullscreen-footer .registration-camera-controls .btn-outline-secondary {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+}
+
+.camera-fullscreen-footer .registration-camera-controls .btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.camera-fullscreen-footer .attendance-camera-controls #attendance-guidance {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls .d-flex.flex-wrap.gap-2 {
+    gap: 0.45rem !important;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls #face-verify-btn {
+    min-height: 2.45rem;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls #attendance-switch-camera-btn {
+    min-height: 2.45rem;
+    min-width: 2.8rem;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls #attendance-switch-camera-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.camera-fullscreen-footer .attendance-camera-controls .progress {
+    background-color: rgba(255, 255, 255, 0.22);
+}
+
+@media (max-width: 576px) {
+    .camera-fullscreen-footer .attendance-camera-controls .d-flex.flex-wrap.gap-2 {
+        flex-direction: column;
+    }
+
+    .camera-fullscreen-footer .attendance-camera-controls #face-verify-btn,
+    .camera-fullscreen-footer .attendance-camera-controls #attendance-switch-camera-btn {
+        width: 100%;
+    }
+}
+
+#registration-camera-controls .btn {
+    font-size: 0.95rem;
+}
+
+#registration-camera-controls #capture-guidance,
+#registration-camera-controls #capture-progress {
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+body.camera-fullscreen-lock {
+    overflow: hidden;
+    touch-action: none;
+}
+
+/* Face Guide Overlay Improvements */
+#face-guide-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 100;
+    transition: opacity 0.4s ease;
+}
+
+#face-guide-overlay .border-3 {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    border-width: 6px !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: border-color, box-shadow;
+}
+
+#face-guide-overlay.detected .border-3 {
+    border-color: #28a745 !important;
+    box-shadow: inset 0 0 50px rgba(40, 167, 105, 0.2), 0 0 24px rgba(40, 167, 105, 0.35);
+}
+
+#face-guide-overlay.not-detected .border-3 {
+    border-color: #dc3545 !important;
+    box-shadow: inset 0 0 50px rgba(220, 53, 69, 0.2);
+}
+
+#face-guide-overlay .face-guide-text {
+    position: absolute;
+    bottom: 20px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #fff;
+    white-space: nowrap;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    animation: fadeInSmooth 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fadeInSmooth {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Camera loading state */
+.camera-loading {
+    position: relative;
+}
+
+.camera-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Verification progress animation */
+.progress-bar-animated {
+    animation: progress-bar-stripes 1.2s linear infinite;
+}
+
+#verification-progress-bar {
+    transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    background: linear-gradient(90deg, #0d6efd, #3b82f6, #6366f1);
+    background-size: 200% 100%;
+    animation: progressShimmer 2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(13, 110, 253, 0.35);
+    will-change: width;
+}
+
+@keyframes progressShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes progress-bar-stripes {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 2rem 0;
+    }
+}
+
+/* Match score display */
+#match-score {
+    color: #0d6efd;
+    font-family: 'JetBrains Mono', 'Monaco', 'Courier New', monospace;
+    letter-spacing: 1px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
+}
+
+#attendance-status {
+    color: #a0a0a0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 0.8rem !important;
+}
+
+#attendance-status.text-success {
+    color: #2fb344 !important;
+    text-shadow: 0 0 8px rgba(47, 179, 68, 0.4);
+}
+
+#attendance-status.text-danger {
+    color: #dc3545 !important;
+}
+
+#attendance-status.text-warning {
+    color: #ffc107 !important;
+}
+
+@keyframes scorePop {
+    0% { transform: scale(1); opacity: 0.7; }
+    40% { transform: scale(1.18); opacity: 1; }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Face detection states */
+.face-detected {
+    border: 2px solid #28a745;
+    box-shadow: 0 0 14px rgba(40, 167, 69, 0.4);
+    transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.face-not-detected {
+    border: 2px solid #dc3545;
+    box-shadow: 0 0 14px rgba(220, 53, 69, 0.4);
+    transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Camera error display */
+#attendance-camera-error {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(30, 30, 30, 0.9) 100%);
+    border-radius: 10px;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+
+#attendance-camera-error i {
+    color: #ff6b6b;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+}
+
+#attendance-camera-error .btn-light {
+    background: white;
+    color: #333;
+}
+
+#attendance-camera-error .btn-light:hover {
+    background: #f0f0f0;
+}
+
+/* Placeholder styling */
+#attendance-placeholder {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e9e9e9 100%);
+    color: #999;
+}
+
+/* Result alerts */
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* Verify button states */
+#face-verify-btn {
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+#face-verify-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+#face-verify-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+/* Attempt counter badge */
+#verification-attempts {
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+#verification-attempts.bg-danger {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Face registration steps */
+.face-registration-step {
+    transition: all 0.3s ease;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+
+.face-registration-step.active {
+    background-color: #e7f3ff;
+    border-left: 4px solid #0d6efd;
+}
+
+.face-registration-step.completed {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+}
+
+.face-registration-step.pending {
+    background-color: #f8f9fa;
+    border-left: 4px solid #dee2e6;
+}
+
+.face-registration-step .step-label {
+    flex: 1;
+}
+
+.face-registration-step i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.face-registration-step.completed i {
+    color: #28a745;
+}
+
+.face-registration-step.active i {
+    color: #0d6efd;
+}
+
+/* Quality indicator cards */
+.quality-indicator-card {
+    background: var(--bs-body-bg, #f8f9fa);
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    transition: border-color 0.3s ease;
+}
+
+.quality-indicator-card .quality-icon {
+    font-size: 1rem;
+    color: var(--bs-secondary, #6c757d);
+}
+
+.quality-indicator-card .quality-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.quality-indicator-card .quality-value {
+    font-weight: 600;
+    font-size: 0.8rem;
+    min-height: 1.2em;
+}
+
+.quality-bar {
+    width: 100%;
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.quality-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    width: 0%;
+    background-color: #6c757d;
+}
+
+.quality-bar-fill.good {
+    background-color: #28a745;
+}
+
+.quality-bar-fill.warning {
+    background-color: #ffc107;
+}
+
+.quality-bar-fill.bad {
+    background-color: #dc3545;
+}
+
+/* === Face Registration Module === */
+
+/* Registration container */
+#registration-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+}
+
+/* Registration progress bar */
+#registration-progress {
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#registration-progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #0d6efd 0%, #0d6efd 100%);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Sample counter */
+#registration-sample-count {
+    text-align: center;
+    font-weight: 600;
+    color: #0d6efd;
+    font-size: 0.95rem;
+}
+
+/* Registration instruction */
+#registration-instruction {
+    text-align: center;
+    color: #495057;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Face alignment guide for registration */
+#registration-face-guide-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.registration-head-guide-circle {
+    width: min(58vw, 280px);
+    height: min(58vw, 280px);
+    border-radius: 50%;
+    border: 4px solid #0d6efd;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 2px rgba(13, 110, 253, 0.2);
+    transition: border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: border-color, box-shadow;
+}
+
+.registration-head-guide-circle.good {
+    border-color: #28a745;
+    box-shadow: inset 0 0 0 2px rgba(40, 167, 69, 0.2), 0 0 24px rgba(40, 167, 69, 0.25);
+}
+
+.registration-head-guide-circle.warning {
+    border-color: #ffc107;
+    box-shadow: inset 0 0 0 2px rgba(255, 193, 7, 0.15);
+}
+
+.registration-head-guide-circle.error {
+    border-color: #dc3545;
+    box-shadow: inset 0 0 0 2px rgba(220, 53, 69, 0.15);
+}
+
+.registration-guide-text {
+    position: absolute;
+    bottom: min(-80px, -12vh);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    min-width: 200px;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: normal;
+    pointer-events: none;
+}
+
+/* Registration capture button */
+#registration-capture-btn {
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#registration-capture-btn:not(:disabled) {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    cursor: pointer;
+}
+
+#registration-capture-btn:not(:disabled):hover {
+    background-color: #218838;
+    border-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25);
+}
+
+#registration-capture-btn:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.25);
+}
+
+#registration-capture-btn:disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Registration cancel button */
+#registration-cancel-btn {
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    background-color: var(--bs-secondary, #6c757d);
+    color: white;
+    border-color: var(--bs-secondary, #6c757d);
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#registration-cancel-btn:hover {
+    background-color: var(--bs-secondary-shade, #5a6268);
+    border-color: var(--bs-secondary-shade, #5a6268);
+    transform: translateY(-1px);
+}
+
+/* Registration status alert */
+#registration-status {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    min-height: 24px;
+}
+
+#registration-result {
+    margin-top: 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+/* Registration success message */
+#registration-result.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* Registration error message */
+#registration-result.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Mobile registration adjustments */
+@media (max-width: 768px) {
+    #registration-container {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .registration-head-guide-circle {
+        width: min(70vw, 240px);
+        height: min(70vw, 240px);
+        border-width: 3px;
+    }
+
+    #registration-capture-btn,
+    #registration-cancel-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        min-height: 40px;
+    }
+
+    #registration-instruction {
+        font-size: 0.9rem;
+    }
+}
+
+.quality-indicator-card.qi-good {
+    border-color: #28a745;
+}
+
+.quality-indicator-card.qi-warning {
+    border-color: #ffc107;
+}
+
+.quality-indicator-card.qi-bad {
+    border-color: #dc3545;
+}
+
+/* Liveness check animation */
+.liveness-check-active #camera-overlay {
+    animation: livenessRing 1.5s ease-in-out infinite;
+}
+
+@keyframes livenessRing {
+
+    0%,
+    100% {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4);
+    }
+
+    50% {
+        border-color: #28a745;
+        box-shadow: 0 0 0 8px rgba(40, 167, 69, 0);
+    }
+}
+
+/* Status indicator */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-indicator.success {
+    background-color: #28a745;
+}
+
+.status-indicator.warning {
+    background-color: #ffc107;
+}
+
+.status-indicator.error {
+    background-color: #dc3545;
+}
+
+.status-indicator.inactive {
+    background-color: #6c757d;
+    animation: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    #camera-overlay {
+        width: min(62vw, 220px) !important;
+    }
+
+    #face-guide-overlay .border-3 {
+        width: min(72vw, 250px) !important;
+    }
+
+    #face-guide-overlay .face-guide-text {
+        max-width: min(80vw, 280px);
+        margin-top: 0.65rem;
+    }
+
+    #attendance-camera-error {
+        width: 95%;
+        max-width: none;
+        padding: 15px;
+    }
+
+    #face-verify-btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+
+    #registration-camera-controls .btn {
+        font-size: 1rem;
+    }
+
+    #registration-camera-controls #capture-guidance,
+    #registration-camera-controls #capture-progress {
+        font-size: 0.98rem;
+    }
+
+    #attendance-camera-controls #attendance-guidance {
+        font-size: 0.98rem;
+    }
+
+    .face-registration-step {
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+    }
+
+    .face-registration-step i {
+        font-size: 1rem;
+    }
+
+    .quality-indicator-card {
+        padding: 6px !important;
+    }
+
+    .quality-indicator-card .quality-icon {
+        font-size: 0.85rem;
+    }
+
+    .quality-indicator-card .quality-label {
+        font-size: 0.6rem;
+    }
+
+    .quality-indicator-card .quality-value {
+        font-size: 0.7rem;
+    }
+}
+
+/* Accessibility improvements */
+#face-verify-btn:focus-visible {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+#attendance-camera:focus-visible {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+
+    #attendance-camera,
+    #face-guide-overlay,
+    #face-verify-btn {
+        display: none !important;
+    }
+}
