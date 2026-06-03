@@ -1,11 +1,13 @@
--- Super Admin credential seed for AMS
--- Login ID: SUPERADMIN001
--- Password: Ams@2026#Super
--- Change the password after first login.
+-- Super Admin credential seed template for AMS
+-- Do not store real credentials in this tracked file.
+-- Preferred flow:
+-- 1. Put local values in .env.superadmin (ignored by Git).
+-- 2. Run ./scripts/generate_superadmin_credentials.sh
+-- 3. Execute scripts/superadmin_credentials.local.sql on the target database.
 
-SET @sa_unique_user_id = 'SUPERADMIN001';
-SET @sa_name = 'AMS Super Admin';
-SET @sa_password_hash = '$2y$12$4TjSE9k4FRce/7f/n.7tVu2k2h6DR7QSImVW5KpdlJxMx3W9cIt5.';
+SET @sa_unique_user_id = 'REPLACE_WITH_SUPERADMIN_UNIQUE_USER_ID';
+SET @sa_name = 'REPLACE_WITH_SUPERADMIN_NAME';
+SET @sa_password_hash = 'REPLACE_WITH_BCRYPT_PASSWORD_HASH';
 
 UPDATE `users`
 SET

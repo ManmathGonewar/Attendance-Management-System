@@ -1,0 +1,4 @@
+.env
+.env.superadmin
+backups/
+scripts/superadmin_credentials.local.sql
