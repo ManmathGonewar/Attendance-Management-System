@@ -14,6 +14,44 @@ This is a complete Attendance Management System with:
 
 ---
 
+## 📸 UI Preview
+
+Representative screens from the live multi-role workflow are included below so the GitHub README shows the product experience at a glance.
+
+### Login & Student Experience
+
+| Login Portal | Student Dashboard |
+|---|---|
+| <img src="docs/screenshots/login-portal.png" alt="Attendance Management System login portal" width="100%"> | <img src="docs/screenshots/student-dashboard.png" alt="Student dashboard" width="100%"> |
+| Secure unified login for all roles. | Student home with overview, face registration status, attendance summary, and upcoming classes. |
+
+| Mark Attendance - OTP Step | Student Profile |
+|---|---|
+| <img src="docs/screenshots/student-mark-attendance-otp.png" alt="Student mark attendance OTP step" width="100%"> | <img src="docs/screenshots/student-profile.png" alt="Student profile page" width="100%"> |
+| Step-based attendance flow starting with OTP validation. | Personal profile with photo, academic info, and editable user details. |
+
+### Faculty Experience
+
+| Faculty Dashboard | Faculty Weekly Timetable |
+|---|---|
+| <img src="docs/screenshots/faculty-dashboard.png" alt="Faculty dashboard" width="100%"> | <img src="docs/screenshots/faculty-timetable.png" alt="Faculty weekly timetable" width="100%"> |
+| Faculty overview with OTP generation, live session controls, and recent session stats. | Weekly timetable highlighting the faculty's own classes versus other assigned slots. |
+
+### College Admin Experience
+
+| College Admin Dashboard | College Settings |
+|---|---|
+| <img src="docs/screenshots/college-admin-dashboard.png" alt="College admin dashboard" width="100%"> | <img src="docs/screenshots/college-admin-settings.png" alt="College settings page" width="100%"> |
+| College-level analytics, low-attendance alerts, and quick actions. | College branding, contact details, and geofencing radius configuration. |
+
+### Timetable Management
+
+<img src="docs/screenshots/timetable-management.png" alt="College admin timetable management screen" width="100%">
+
+Timetable management view with department filters and slot-wise edit/delete controls for class scheduling.
+
+---
+
 ## 🎯 Key Features
 
 ### 1. Face Verification
@@ -65,6 +103,8 @@ AMS/
 ├── README.md (this file)
 ├── .env (configuration)
 ├── index.html (main application shell)
+├── docs/
+│   └── screenshots/ (README preview images for GitHub)
 ├── backend/
 │   ├── public/
 │   │   └── api.php (RESTful API endpoints)
